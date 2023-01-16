@@ -1,5 +1,5 @@
-pre-commit
 black
-flake8
-pytest
 coverage
+flake8
+pre-commit
+pytest
