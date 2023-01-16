@@ -13,7 +13,6 @@ repos:
     - id: check-docstring-first
     - id: end-of-file-fixer
     - id: debug-statements
-    - id: double-quote-string-fixer
     - id: name-tests-test
     - id: requirements-txt-fixer
 - repo: https://github.com/pycqa/flake8
