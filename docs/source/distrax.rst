@@ -10,3 +10,4 @@ Subpackages
    :maxdepth: 1
 
    distrax.utils
+   distrax.mons
