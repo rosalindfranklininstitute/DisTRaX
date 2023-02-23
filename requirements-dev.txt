@@ -4,3 +4,6 @@ flake8
 pre-commit
 pytest
 sphinx
+sphinx-autodoc-typehints
+sphinx-remove-toctrees
+sphinx_design
