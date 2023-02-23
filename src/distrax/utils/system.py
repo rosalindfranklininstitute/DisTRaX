@@ -1,18 +1,24 @@
 import re
 import subprocess
+import os
 
 
-def is_systemd():
+def is_systemd() -> bool:
     """
     Check if the system is using systemd
 
-    If this is the case the file /proc/1/comm will have systemd within it
+    Returns:
+        True if the system uses systemd else False
 
-    :return: True if systemd else False
+    Examples:
+        >>> distrax.utils.system.is_systemd()
+        True
     """
-    try:
-        file = open("/proc/1/comm")
-    except FileNotFoundError:
+    # If this is the case the file /proc/1/comm will have systemd within it
+    PROCESS_PATH = "/proc/1/comm"
+    if os.path.exists(PROCESS_PATH):
+        file = open(PROCESS_PATH)
+    else:
         return False
     for line in file:
         if re.search("systemd", line):
@@ -20,11 +26,15 @@ def is_systemd():
     return False
 
 
-def enable_service(service):
+def enable_service(service: str):
     """
     Enables systemd service
-    :param service: The systemd service to enable
-    :return: N/A
+
+    Args:
+        service: The systemd service to enable
+
+    Examples:
+        >>> distrax.utils.system.enable_service("service_to_enable")
     """
     if is_systemd():
         subprocess.run(
@@ -36,11 +46,15 @@ def enable_service(service):
         )
 
 
-def disable_service(service):
+def disable_service(service: str):
     """
     Disables systemd service
-    :param service: The systemd service to disable
-    :return: N/A
+
+    Args:
+        service: The systemd service to disable
+
+    Examples:
+        >>> distrax.utils.system.disable_service("service_to_disable")
     """
     if is_systemd():
         subprocess.run(
@@ -52,11 +66,20 @@ def disable_service(service):
         )
 
 
-def is_systemd_service_enabled(service):
+def is_systemd_service_enabled(service: str) -> bool:
     """
     Check if systemd service is enabled or not
-    :param service: service to check
-    :return: True if enabled else 0
+
+    Args:
+        service: The systemd process to check
+
+    Returns:
+        True if enabled else False
+    Examples:
+        >>> distrax.utils.system.is_systemd_service_enabled("enabled_service")
+        True
+        >>> distrax.utils.system.is_systemd_service_enabled("disabled_service")
+        False
     """
     result = subprocess.run(
         [
@@ -69,11 +92,15 @@ def is_systemd_service_enabled(service):
     return result.returncode == 0
 
 
-def start_service(service):
+def start_service(service: str):
     """
-    Starts systemd service
-    :param service: The systemd service to start
-    :return: N/A
+    Start systemd service
+
+    Args:
+        service: The systemd service to start
+
+    Examples:
+        >>> distrax.utils.system.start_service("service_to_start")
     """
     if is_systemd():
         subprocess.run(
@@ -85,11 +112,16 @@ def start_service(service):
         )
 
 
-def stop_service(service):
+def stop_service(service: str):
     """
     Stops systemd service
-    :param service: The systemd service to stop
-    :return: N/A
+
+    Args:
+        service: The systemd service to stop running
+
+    Examples:
+
+        >>> distrax.utils.system.stop_service("service_to_stop")
     """
     if is_systemd():
         subprocess.run(
@@ -101,11 +133,22 @@ def stop_service(service):
         )
 
 
-def is_systemd_service_active(service):
+def is_systemd_service_active(service: str) -> bool:
     """
     Check if systemd service is active or not
-    :param service: service to check
-    :return: True if active else 0
+
+    Args:
+        service: The systemd process to check
+
+    Returns:
+        True if enabled else False
+
+    Examples:
+
+        >>> distrax.utils.system.is_systemd_service_active("active_service")
+        True
+        >>> distrax.utils.system.is_systemd_service_active("stopped_service")
+        False
     """
     result = subprocess.run(
         [
