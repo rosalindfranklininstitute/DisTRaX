@@ -1,20 +1,14 @@
-.. DisTRaX documentation master file, created by
-   sphinx-quickstart on Thu Feb 16 15:49:07 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to DisTRaX's documentation!
 ===================================
 
+**DisTRaX** is a Python library to deploy temporary storage mechanisms onto HPC infrastructure in a fast and scalable fashion.
+
+.. note::
+
+   This project is under active development.
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :hidden:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   Home Page <self>
+   API reference <distrax>
