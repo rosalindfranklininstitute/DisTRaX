@@ -1,5 +1,6 @@
 import os
 import shutil
+from typing import List
 
 
 def create_dir(path: str, mode: int) -> bool:
@@ -144,3 +145,82 @@ def recursive_change_ownership(path: str, user: str, group: str) -> bool:
         return True
     else:
         return False
+
+
+def change_permissions(path: str, mode: int):
+    """
+    Change a files permission to the mode specified
+    Args:
+        path: Path of the file to change
+        mode: Octal number of linux permissions i.e. 0o755
+
+    Returns:
+        True if successful else False
+
+    Examples:
+        >>> distrax.utils.fileio.change_permissions("file", 0o775)
+        True
+        >>> distrax.utils.fileio.change_permissions("no_file",0o775)
+        False
+    """
+    if os.path.exists(path):
+        os.chmod(path, mode)
+        return True
+    else:
+        return False
+
+
+def recursive_change_permissions(path: str, mode: int):
+    """
+    Recursively change the permission to the mode specified of a directory and the files
+    Args:
+        path: Path of the file to change
+        mode: Octal number of linux permissions i.e. 0o755
+
+    Returns:
+        True if successful else False
+
+    Examples:
+        >>> distrax.utils.fileio.recursive_change_permissions("folder", 0o775)
+        True
+        >>> distrax.utils.fileio.recursive_change_permissions("no_folder",0o775)
+        False
+    """
+    if os.path.isdir(path):
+        for dir_path, _, filenames in os.walk(path):
+            change_permissions(dir_path, mode)
+            for filename in filenames:
+                change_permissions(os.path.join(dir_path, filename), mode)
+        return True
+    else:
+        return False
+
+
+def append_file_in_folder(folder: str, file_to_update: str, files_to_append: List[str]):
+    """
+    Append file_to_update with the files in files_to_append.
+
+    Write the contents of the files_to_append into the file_to_update, the files must be
+    from the same folder.
+
+    Args:
+        folder: Where the files are stored
+        file_to_update: File to update
+        files_to_append: The files to append
+
+    Examples:
+        cat ./file1
+            hi
+        cat ./file2
+            hi
+        >>> distrax.utils.fileio.append_file_in_folder(".", "file1", ["file2"])
+
+        cat ./file1
+            hi\n
+            hi
+    """
+    with open(f"{folder}/{file_to_update}", "ab") as write_file:
+        for file in files_to_append:
+            write_file.write(b"\r\n")
+            with open(f"{folder}/{file}", "rb") as infile:
+                shutil.copyfileobj(infile, write_file)

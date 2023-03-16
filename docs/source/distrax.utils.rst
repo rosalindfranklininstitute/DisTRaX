@@ -9,5 +9,9 @@
 
     distrax.utils.system
     distrax.utils.fileio
+    distrax.utils.network
 
 .. automodule:: distrax.utils
+
+.. autosummary::
+  :toctree: _autosummary

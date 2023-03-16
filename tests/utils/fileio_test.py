@@ -10,6 +10,7 @@ import grp
 TEST_FOLDER = "TEST_FOLDER"
 TEST_SUB_FOLDER = TEST_FOLDER + "/" + TEST_FOLDER
 TEST_FILE = "TEST_FILE.txt"
+TEST_FILE2 = "TEST_FILE2.txt"
 NON_EXISTENT_FILE = "NON_EXISTENT_FILE.txt"
 TEST_USER = "test_python_user"
 TEST_GRP = "test_python_group"
@@ -54,6 +55,25 @@ def file_resource():
     yield "text_file_resource"
     if os.path.exists(TEST_FILE):
         os.remove(TEST_FILE)
+
+
+@pytest.fixture()
+def files_resource():
+    """
+    Create text files with hi inside
+    """
+    if os.path.exists(TEST_FOLDER):
+        shutil.rmtree(TEST_FOLDER)
+    os.mkdir(TEST_FOLDER)
+    with open(TEST_FOLDER + "/" + TEST_FILE, "w") as f:
+        f.write("hi")
+        f.close()
+    with open(TEST_FOLDER + "/" + TEST_FILE2, "w") as f:
+        f.write("hi")
+        f.close()
+    yield "files_resource"
+    if os.path.exists(TEST_FOLDER):
+        shutil.rmtree(TEST_FOLDER)
 
 
 class TestFileIO:
@@ -148,3 +168,27 @@ class TestFileIO:
                 + "This requires being run in root.\n",
                 "",
             )
+
+    def test_change_permissions(self, file_resource):
+        test_file_mode = oct(os.stat(TEST_FILE).st_mode & 0o777)
+        fileio.change_permissions(TEST_FILE, 0o777)
+        assert test_file_mode != oct(os.stat(TEST_FILE).st_mode & 0o777)
+        assert fileio.change_permissions(NON_EXISTENT_FILE, 0o777) is False
+
+    def test_recursive_change_permissions(self, sub_folder_file_resource):
+        test_folder_mode = oct(os.stat(TEST_FOLDER).st_mode & 0o777)
+        test_subfolder_mode = oct(os.stat(TEST_SUB_FOLDER).st_mode & 0o777)
+        test_file_mode = oct(os.stat(f"{TEST_SUB_FOLDER}/{TEST_FILE}").st_mode & 0o777)
+        fileio.recursive_change_permissions(TEST_FOLDER, 0o777)
+        assert test_file_mode != oct(
+            os.stat(f"{TEST_SUB_FOLDER}/{TEST_FILE}").st_mode & 0o777
+        )
+        assert test_subfolder_mode != oct(os.stat(TEST_SUB_FOLDER).st_mode & 0o777)
+        assert test_folder_mode != oct(os.stat(TEST_FOLDER).st_mode & 0o777)
+        assert fileio.recursive_change_permissions(NON_EXISTENT_FILE, 0o777) is False
+
+    def test_append_file_in_folder(self, files_resource):
+        fileio.append_file_in_folder(TEST_FOLDER, TEST_FILE, [TEST_FILE2])
+        with open(TEST_FOLDER + "/" + TEST_FILE) as f:
+            assert f.readline() == "hi\n"
+            assert f.readline() == "hi"
