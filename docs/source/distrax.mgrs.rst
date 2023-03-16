@@ -8,6 +8,7 @@
     :maxdepth: 1
 
     distrax.mgrs.abstract_mgr
+    distrax.mgrs.ceph_mgr
 
 .. automodule:: distrax.mgrs
 
