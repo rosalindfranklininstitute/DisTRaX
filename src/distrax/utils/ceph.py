@@ -98,7 +98,7 @@ def create_mon_key(folder: str) -> str:
     Returns:
         filename
     """
-    return create_keyring(folder, "mon", {"caps mon": "allow *"})
+    return create_keyring(folder, "mon.", {"caps mon": "allow *"})
 
 
 def create_osd_key(folder: str) -> str:
