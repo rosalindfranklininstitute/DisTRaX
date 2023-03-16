@@ -10,6 +10,7 @@
     distrax.utils.system
     distrax.utils.fileio
     distrax.utils.network
+    distrax.utils.ceph
 
 .. automodule:: distrax.utils
 
