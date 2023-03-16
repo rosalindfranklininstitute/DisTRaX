@@ -19,3 +19,5 @@ Functions relevant to file input/output operations
     recursive_change_ownership
     remove_dir
     remove_file
+    change_permissions
+    recursive_change_permissions
