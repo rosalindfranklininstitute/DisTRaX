@@ -21,3 +21,4 @@ Functions relevant to file input/output operations
     remove_file
     change_permissions
     recursive_change_permissions
+    append_file_in_folder
