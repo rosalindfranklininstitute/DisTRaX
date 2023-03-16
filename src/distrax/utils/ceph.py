@@ -13,16 +13,15 @@ def generate_auth_key() -> str:
     Generate Ceph Auth Key
 
     This is informed from:
-        https://github.com/ceph/ceph-deploy/blob/master/ceph_deploy/new.py
+    https://github.com/ceph/ceph-deploy/blob/master/ceph_deploy/new.py
     however secrets are used instead of os.urandom due to PEP 506
-    (https://peps.python.org/pep-0506/)
+    https://peps.python.org/pep-0506/
 
     Returns:
         A string of length 40 containing a valid Ceph Key
 
     Examples:
         >>> keyring = distrax.utils.ceph.generate_auth_key()
-            ****************************************
         >>> len(keyring)
             40
     """
