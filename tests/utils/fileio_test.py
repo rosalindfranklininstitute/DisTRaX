@@ -148,3 +148,21 @@ class TestFileIO:
                 + "This requires being run in root.\n",
                 "",
             )
+
+    def test_change_permissions(self, file_resource):
+        test_file_mode = oct(os.stat(TEST_FILE).st_mode & 0o777)
+        fileio.change_permissions(TEST_FILE, 0o777)
+        assert test_file_mode != oct(os.stat(TEST_FILE).st_mode & 0o777)
+        assert fileio.change_permissions(NON_EXISTENT_FILE, 0o777) is False
+
+    def test_recursive_change_permissions(self, sub_folder_file_resource):
+        test_folder_mode = oct(os.stat(TEST_FOLDER).st_mode & 0o777)
+        test_subfolder_mode = oct(os.stat(TEST_SUB_FOLDER).st_mode & 0o777)
+        test_file_mode = oct(os.stat(f"{TEST_SUB_FOLDER}/{TEST_FILE}").st_mode & 0o777)
+        fileio.recursive_change_permissions(TEST_FOLDER, 0o777)
+        assert test_file_mode != oct(
+            os.stat(f"{TEST_SUB_FOLDER}/{TEST_FILE}").st_mode & 0o777
+        )
+        assert test_subfolder_mode != oct(os.stat(TEST_SUB_FOLDER).st_mode & 0o777)
+        assert test_folder_mode != oct(os.stat(TEST_FOLDER).st_mode & 0o777)
+        assert fileio.recursive_change_permissions(NON_EXISTENT_FILE, 0o777) is False
