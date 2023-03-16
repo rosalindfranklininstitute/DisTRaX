@@ -194,3 +194,33 @@ def recursive_change_permissions(path: str, mode: int):
         return True
     else:
         return False
+
+
+def append_file_in_folder(folder: str, file_to_update: str, files_to_append: List[str]):
+    """
+    Append file_to_update with the files in files_to_append.
+
+    Write the contents of the files_to_append into the file_to_update, the files must be
+    from the same folder.
+
+    Args:
+        folder: Where the files are stored
+        file_to_update: File to update
+        files_to_append: The files to append
+
+    Examples:
+        cat ./file1
+            hi
+        cat ./file2
+            hi
+        >>> distrax.utils.fileio.append_file_in_folder(".", "file1", ["file2"])
+
+        cat ./file1
+            hi\n
+            hi
+    """
+    with open(f"{folder}/{file_to_update}", "ab") as write_file:
+        for file in files_to_append:
+            write_file.write(b"\r\n")
+            with open(f"{folder}/{file}", "rb") as infile:
+                shutil.copyfileobj(infile, write_file)
