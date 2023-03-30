@@ -3,8 +3,8 @@
 ``distrax.mgrs.ceph_mgr`` class
 ===============================
 
-This holds the AbstractMgr Class, which is expected to be used as a template
-for all created MGR classes.
+This holds the CephMGR Class, which allows for the creation and removal of the Manager
+Daemon
 
 
 .. currentmodule:: distrax.mgrs.ceph_mgr
