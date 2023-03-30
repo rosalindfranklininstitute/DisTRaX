@@ -11,3 +11,4 @@ Subpackages
 
    distrax.utils
    distrax.mons
+   distrax.mgrs
