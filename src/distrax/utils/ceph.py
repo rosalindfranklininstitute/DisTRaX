@@ -6,6 +6,7 @@ import struct
 
 ETC_CEPH = "/etc/ceph/"
 VAR_MON = "/var/lib/ceph/mon/ceph-"
+VAR_MGR = "/var/lib/ceph/mgr/ceph-"
 
 
 def generate_auth_key() -> str:
