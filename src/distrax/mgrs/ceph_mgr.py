@@ -37,7 +37,6 @@ class CephMGR(AbstractMGR):
         monitoring and interfacing to external tools.
 
         Examples:
-            >>> mgr = CephMGR()
             >>> mgr.create_mgr()
 
         """
@@ -65,7 +64,6 @@ class CephMGR(AbstractMGR):
         Returns: the name of the keyring ceph.mgr.keyring
 
         Examples:
-            >>> mgr = CephMGR()
             >>>mgr._add_mgr()
                 ceph.mgr.keyring
         """
@@ -91,7 +89,6 @@ class CephMGR(AbstractMGR):
         Remove the Ceph Manager Daemon
 
         Examples:
-            >>> mgr = CephMGR()
             >>> mgr.remove_mgr()
         """
         system.stop_service("ceph-mgr.target")

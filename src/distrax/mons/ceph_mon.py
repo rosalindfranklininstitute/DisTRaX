@@ -41,6 +41,9 @@ class CephMON(AbstractMON):
 
         Args:
             interface: the network interface the cluster will be using.
+
+        Examples:
+            >>> ceph_mon.create_mon("lo")
         """
 
         # Get system details
@@ -84,9 +87,9 @@ class CephMON(AbstractMON):
     def _create_cluster(self, mon_key: str):
         """
         Create the Ceph Cluster with the monitor node
+
         Args:
             mon_key: The filename of the mon key generated
-            self.folder: self.folder where the key is placed
         """
 
         subprocess.run(
@@ -161,7 +164,7 @@ class CephMON(AbstractMON):
             True if mon is removed, otherwise False
 
         Examples:
-            >>> CephMON().remove_mon()
+            >>> ceph_mon.remove_mon()
         """
         system.stop_service("ceph-mon.target")
         system.disable_service("ceph-mon.target")
