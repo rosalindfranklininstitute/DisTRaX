@@ -12,3 +12,5 @@ Subpackages
    distrax.utils
    distrax.mons
    distrax.mgrs
+   distrax.devices
+   distrax.exceptions
