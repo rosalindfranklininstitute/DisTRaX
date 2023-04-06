@@ -33,14 +33,12 @@ class AbstractMON(metaclass=abc.ABCMeta):
         )
 
     @abc.abstractmethod
-    def create_mon(self, interface: str, folder: str) -> bool:
+    def create_mon(self, interface: str) -> bool:
         """
         Create the monitor node
 
         Args:
             interface: the network interface the cluster will be using.
-            folder: The folder to place files created,
-                    if it does not exist it should be created.
 
         Raises:
             NotImplementedError: until implemented
@@ -51,15 +49,11 @@ class AbstractMON(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def remove_mon(self, folder: str) -> bool:
+    def remove_mon(self) -> bool:
         """
         Remove the monitor node
 
         Stop and Disable the monitor node
-
-        Args:
-            folder: The folder to remove that contains the files created,
-                    if an empty string nothing to remove.
 
         Raises:
             NotImplementedError: until implemented

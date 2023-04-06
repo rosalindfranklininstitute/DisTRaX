@@ -33,12 +33,9 @@ class AbstractMGR(metaclass=abc.ABCMeta):
         )
 
     @abc.abstractmethod
-    def create_mgr(self, folder: str) -> bool:
+    def create_mgr(self) -> bool:
         """
         Create the manager node
-
-        Args:
-            folder: The folder to place files created
 
         Raises:
             NotImplementedError: until implemented
@@ -49,14 +46,11 @@ class AbstractMGR(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def remove_mgr(self, folder: str) -> bool:
+    def remove_mgr(self) -> bool:
         """
         Remove the manager node
 
         Stop and Disable the manager node
-
-        Args:
-            folder: The folder to remove that contains the files created
 
         Raises:
             NotImplementedError: until implemented
