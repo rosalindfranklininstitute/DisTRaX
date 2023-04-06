@@ -25,10 +25,10 @@ class AbstractMGR(metaclass=abc.ABCMeta):
 
         """
         return (
-            hasattr(subclass, "create_mon")
-            and callable(subclass.create_mon)
-            and hasattr(subclass, "remove_mon")
-            and callable(subclass.remove_mon)
+            hasattr(subclass, "create_mgr")
+            and callable(subclass.create_mgr)
+            and hasattr(subclass, "remove_mgr")
+            and callable(subclass.remove_mgr)
             or NotImplemented
         )
 

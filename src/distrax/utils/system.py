@@ -159,3 +159,19 @@ def is_systemd_service_active(service: str) -> bool:
         ]
     )
     return result.returncode == 0
+
+
+def free_memory() -> int:
+    """
+    Get the amount of free RAM available on the system
+    Returns:
+
+    Examples:
+        >>> free_memory()
+            14623096
+    """
+    with open("/proc/meminfo") as file:
+        for line in file:
+            if "MemFree" in line:
+                free_mem = line.split()[1]
+                return int(free_mem)
