@@ -26,6 +26,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_autodoc_typehints",
     "sphinx_remove_toctrees",
+    "sphinx_copybutton",
     "sphinx_design",
 ]
 
