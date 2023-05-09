@@ -5,5 +5,7 @@ pre-commit
 pytest
 sphinx
 sphinx-autodoc-typehints
+sphinx-book-theme
 sphinx-remove-toctrees
+sphinx_copybutton
 sphinx_design
