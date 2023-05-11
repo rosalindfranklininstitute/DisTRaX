@@ -1,4 +1,3 @@
-from distrax.mgrs.abstract_mgr import AbstractMGR
 import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.system as system
@@ -6,7 +5,7 @@ import distrax.utils.network as network
 import subprocess
 
 
-class CephMGR(AbstractMGR):
+class CephMGR:
     """
     Ceph Manager Class
 

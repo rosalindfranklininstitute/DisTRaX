@@ -1,4 +1,3 @@
-from distrax.osds.abstract_osd import AbstractOSD
 import distrax.utils.fileio as fileio
 import distrax.utils.ceph as ceph
 import distrax.utils.system as system
@@ -7,7 +6,7 @@ import glob
 from typing import List
 
 
-class CephOSD(AbstractOSD):
+class CephOSD:
     """
     Class for the creation and removal of Ceph OSDs
     """

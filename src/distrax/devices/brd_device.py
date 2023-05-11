@@ -1,11 +1,10 @@
-from distrax.devices.abstract_device import AbstractDevice
 from distrax.utils.system import free_memory
 from distrax.exceptions.exceptions import NotEnoughMemoryError, DeviceCreationError
 import subprocess
 import os
 
 
-class BRDDevice(AbstractDevice):
+class BRDDevice:
     """
     BRDDevice class this allows for the creation of the
     and removal of the block device.
