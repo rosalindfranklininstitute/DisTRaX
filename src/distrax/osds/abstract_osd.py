@@ -24,10 +24,10 @@ class AbstractOSD(metaclass=abc.ABCMeta):
 
         """
         return (
-            hasattr(subclass, "create_osd")
+            hasattr(subclass, "create_osds")
             and callable(subclass.create_osds)
-            and hasattr(subclass, "remove_osd")
-            and callable(subclass.remove_osd)
+            and hasattr(subclass, "remove_osds")
+            and callable(subclass.remove_osds)
             or NotImplemented
         )
 
