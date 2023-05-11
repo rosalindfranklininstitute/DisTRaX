@@ -126,3 +126,25 @@ def create_osd_key(folder: str) -> str:
         "client.bootstrap-osd",
         {"caps mon": "profile bootstrap-osd", "caps mgr": "allow r"},
     )
+
+
+def osd_status() -> dict:
+    """
+    Get the status of the OSDs
+
+    Returns:
+        Where the `int` is a number
+
+        >>> {'epoch': int,
+        ...  'num_osds': int,
+        ...  'num_up_osds': int,
+        ...  'osd_up_since': int,
+        ...  'num_in_osds': int,
+        ...  'osd_in_since': int,
+        ...  'num_remapped_pgs': int}
+
+    """
+    status = subprocess.run(
+        ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE
+    )
+    return json.loads(status.stdout)
