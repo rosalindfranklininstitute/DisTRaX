@@ -1,7 +1,8 @@
-import abc
+from typing_extensions import Protocol, runtime_checkable
 
 
-class AbstractMON(metaclass=abc.ABCMeta):
+@runtime_checkable
+class AbstractMON(Protocol):
     """
     An interface for MON Classes
 
@@ -12,53 +13,18 @@ class AbstractMON(metaclass=abc.ABCMeta):
     The only methods publicly visible to the user should be create_mon and remove_mon
     """
 
-    @classmethod
-    def __subclasshook__(cls, subclass):
-        """
-        Check if the functions are present and implemented in a subclass
-        This ensures that the abstract class is adhered to.
-        Args:
-            subclass: The class to check
-
-        Returns:
-            True if functions are present, otherwise False
-
-        """
-        return (
-            hasattr(subclass, "create_mon")
-            and callable(subclass.create_mon)
-            and hasattr(subclass, "remove_mon")
-            and callable(subclass.remove_mon)
-            or NotImplemented
-        )
-
-    @abc.abstractmethod
-    def create_mon(self, interface: str) -> bool:
+    def create_mon(self, interface: str) -> None:
         """
         Create the monitor node
 
         Args:
             interface: the network interface the cluster will be using.
 
-        Raises:
-            NotImplementedError: until implemented
-
-        Returns:
-            True if mon is created, otherwise False
         """
-        raise NotImplementedError
+        ...
 
-    @abc.abstractmethod
-    def remove_mon(self) -> bool:
+    def remove_mon(self) -> None:
         """
         Remove the monitor node
-
-        Stop and Disable the monitor node
-
-        Raises:
-            NotImplementedError: until implemented
-
-        Returns:
-            True if mon is removed, otherwise False
         """
-        raise NotImplementedError
+        ...
