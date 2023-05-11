@@ -11,6 +11,7 @@ setup(
     author_email="gabryel.mason-williams@rfi.ac.uk",
     packages=find_packages("src"),
     package_dir={"": "src"},
+    package_data={"distrax": ["py.typed"]},
     test_suite="tests",
     classifiers=[
         "License :: OSI Approved :: Apache License, Version 2.0",
