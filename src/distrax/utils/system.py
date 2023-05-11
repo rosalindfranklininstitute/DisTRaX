@@ -31,7 +31,7 @@ def enable_service(service: str) -> None:
     Enables systemd service
 
     Args:
-        service(str): The systemd service to enable
+        service: The systemd service to enable
 
     Examples:
         >>> distrax.utils.system.enable_service("service_to_enable")
@@ -51,7 +51,7 @@ def disable_service(service: str) -> None:
     Disables systemd service
 
     Args:
-        service(str): The systemd service to disable
+        service: The systemd service to disable
 
     Examples:
         >>> distrax.utils.system.disable_service("service_to_disable")
@@ -71,7 +71,7 @@ def is_systemd_service_enabled(service: str) -> bool:
     Check if systemd service is enabled or not
 
     Args:
-        service (str): The systemd process to check
+        service: The systemd process to check
 
     Returns:
         True if enabled else False
@@ -98,7 +98,7 @@ def start_service(service: str) -> None:
     Start systemd service
 
     Args:
-        service(str): The systemd service to start
+        service: The systemd service to start
 
     Examples:
         >>> distrax.utils.system.start_service("service_to_start")
@@ -118,7 +118,7 @@ def stop_service(service: str) -> None:
     Stops systemd service
 
     Args:
-        service(str): The systemd service to stop running
+        service: The systemd service to stop running
 
     Examples:
         >>> distrax.utils.system.stop_service("service_to_stop")
@@ -138,7 +138,7 @@ def is_systemd_service_active(service: str) -> bool:
     Check if systemd service is active or not
 
     Args:
-        service(str): The systemd process to check
+        service: The systemd process to check
 
     Returns:
         True if enabled else False

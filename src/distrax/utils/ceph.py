@@ -5,6 +5,7 @@ import configparser
 import struct
 import subprocess
 import json
+from typing import Dict
 
 ETC_CEPH = "/etc/ceph"
 VAR_MON = "/var/lib/ceph/mon/ceph-"
@@ -47,23 +48,20 @@ def generate_auth_key() -> str:
     return base64.b64encode(header + key).decode("utf-8")
 
 
-def create_keyring(folder: str, name: str, permissions: dict) -> str:
+def create_keyring(folder: str, name: str, permissions: Dict[str, str]) -> None:
     """
     Creates a Ceph Keyring file and writes the keyring with the permissions passed
 
     Args:
         folder: folder to place keyring
         name: Name of the keyring
-        permissions: arguments for the keyring i.e {caps mon: "allow *}
+        permissions: arguments for the keyring i.e {"caps mon": "allow *"}
 
-    Returns:
-        The filename of the keyring file
 
     Examples:
         >>> import distrax.utils.ceph as ceph
         >>> mon_keyring = ceph.create_keyring("ceph", "mon", {"caps mon": "allow *"})
-        >>> print(mon_keyring)
-            ceph.mon.keyring
+
     """
     config = configparser.ConfigParser()
     filename = f"ceph.{name}.keyring"
@@ -73,10 +71,9 @@ def create_keyring(folder: str, name: str, permissions: dict) -> str:
     config[name].update(permissions)
     with open(f"{folder}/{filename}", "w") as configfile:
         config.write(configfile)
-    return filename
 
 
-def create_admin_key(folder: str) -> str:
+def create_admin_key(folder: str) -> None:
     """
     Helper function for creating admin_keyring
 
@@ -86,7 +83,7 @@ def create_admin_key(folder: str) -> str:
     Returns:
         filename
     """
-    return create_keyring(
+    create_keyring(
         folder,
         "client.admin",
         {
@@ -98,28 +95,24 @@ def create_admin_key(folder: str) -> str:
     )
 
 
-def create_mon_key(folder: str) -> str:
+def create_mon_key(folder: str) -> None:
     """
     Helper function for creating mon_keyring
 
     Args:
         folder: folder to place keyring
 
-    Returns:
-        filename
     """
-    return create_keyring(folder, "mon.", {"caps mon": "allow *"})
+    create_keyring(folder, "mon.", {"caps mon": "allow *"})
 
 
-def create_osd_key(folder: str) -> str:
+def create_osd_key(folder: str) -> None:
     """
     Helper function for creating osd_keyring
 
     Args:
         folder: folder to place keyring
 
-    Returns:
-        filename
     """
     return create_keyring(
         folder,
@@ -128,7 +121,7 @@ def create_osd_key(folder: str) -> str:
     )
 
 
-def osd_status() -> dict:
+def osd_status() -> Dict[str, int]:
     """
     Get the status of the OSDs
 
@@ -154,4 +147,4 @@ def osd_status() -> dict:
     status = subprocess.run(
         ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE
     )
-    return json.loads(status.stdout)
+    return dict(json.loads(status.stdout))

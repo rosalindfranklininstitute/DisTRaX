@@ -147,9 +147,10 @@ def recursive_change_ownership(path: str, user: str, group: str) -> bool:
         return False
 
 
-def change_permissions(path: str, mode: int):
+def change_permissions(path: str, mode: int) -> bool:
     """
     Change a files permission to the mode specified
+
     Args:
         path: Path of the file to change
         mode: Octal number of linux permissions i.e. 0o755
@@ -170,9 +171,10 @@ def change_permissions(path: str, mode: int):
         return False
 
 
-def recursive_change_permissions(path: str, mode: int):
+def recursive_change_permissions(path: str, mode: int) -> bool:
     """
     Recursively change the permission to the mode specified of a directory and the files
+
     Args:
         path: Path of the file to change
         mode: Octal number of linux permissions i.e. 0o755
@@ -196,7 +198,9 @@ def recursive_change_permissions(path: str, mode: int):
         return False
 
 
-def append_file_in_folder(folder: str, file_to_update: str, files_to_append: List[str]):
+def append_file_in_folder(
+    folder: str, file_to_update: str, files_to_append: List[str]
+) -> None:
     """
     Append file_to_update with the files in files_to_append.
 
@@ -213,11 +217,14 @@ def append_file_in_folder(folder: str, file_to_update: str, files_to_append: Lis
             hi
         cat ./file2
             hi
+
         >>> distrax.utils.fileio.append_file_in_folder(".", "file1", ["file2"])
 
         cat ./file1
+
             hi\n
             hi
+
     """
     with open(f"{folder}/{file_to_update}", "ab") as write_file:
         for file in files_to_append:

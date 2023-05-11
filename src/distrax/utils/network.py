@@ -35,7 +35,8 @@ def ip_address_from_network_interface(interface: str) -> str:
 
 def hostname() -> str:
     """
-    get the hostname of the system
+    Get the hostname of the system
+
     Returns:
         The hostname of the machine
 

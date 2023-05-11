@@ -16,13 +16,13 @@ class BRDDevice(AbstractDevice):
         >>> device = BRDDevice()
     """
 
-    def create_device(self, size: int, number: int = 1):
+    def create_device(self, size: int, number: int = 1) -> None:
         """
         Create BRD Block Device
 
         Args:
-            size (int): number representing a GiB, i.e 4 would mean 4GiB
-            number(int): Number of block devices to create, i.e. 4 will create 4 devices
+            size: number representing a GiB, i.e 4 would mean 4GiB
+            number: Number of block devices to create, i.e. 4 will create 4 devices
                         of the size stated
 
         Raises:
@@ -60,7 +60,7 @@ class BRDDevice(AbstractDevice):
                 "DisTRaX again"
             )
 
-    def remove_device(self):
+    def remove_device(self) -> None:
         """
         Removes the BRD device from the systems
 

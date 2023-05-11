@@ -17,19 +17,19 @@ class CephOSD(AbstractOSD):
         Initialise the CephOSD object
 
         Args:
-            folder(str): the place to place the keys of the ceph system
+            folder: the place to place the keys of the ceph system
 
         Examples:
             >>> ceph_osd = CephOSD()
         """
         self.folder = folder
 
-    def create_osds(self, devices: List[str]):
+    def create_osds(self, devices: List[str]) -> None:
         """
         Create the OSDs devices
 
         Args:
-            devices (:obj:`list` of :obj:`str`): The device names to turn into OSDs
+            devices: The device names to turn into OSDs
 
         Examples:
             >>> CephOSD().create_osds(["/dev/ram0", "/dev/ram1"])
@@ -61,12 +61,12 @@ class CephOSD(AbstractOSD):
         for device in devices:
             subprocess.run(["ceph-volume", "lvm", "create", "--data", device])
 
-    def remove_osds(self, devices: List[str]):
+    def remove_osds(self, devices: List[str]) -> None:
         """
         Remove the OSDs devices from the system
 
         Args:
-            devices (:obj:`list` of :obj:`str`): The device names to turn into OSDs
+            devices: The device names to turn into OSDs
 
         Examples:
             >>> CephOSD().remove_osds(["/dev/ram0", "/dev/ram1"])
