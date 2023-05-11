@@ -3,10 +3,20 @@ import time
 import base64
 import configparser
 import struct
+import subprocess
+import json
 
-ETC_CEPH = "/etc/ceph/"
+ETC_CEPH = "/etc/ceph"
 VAR_MON = "/var/lib/ceph/mon/ceph-"
 VAR_MGR = "/var/lib/ceph/mgr/ceph-"
+VAR_BOOTSTRAP_OSD = "/var/lib/ceph/bootstrap-osd"
+VAR_OSD = "/var/lib/ceph/osd"
+VAR_OSD_ID = "/var/lib/ceph/osd/ceph-"
+MON_KEYRING = "ceph.mon..keyring"
+OSD_KEYRING = "ceph.client.bootstrap-osd.keyring"
+ADMIN_KEYRING = "ceph.client.admin.keyring"
+CONFIG_FILE = "ceph.conf"
+AUTH = "cephx"
 
 
 def generate_auth_key() -> str:
