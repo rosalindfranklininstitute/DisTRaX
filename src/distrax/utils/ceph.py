@@ -3,10 +3,20 @@ import time
 import base64
 import configparser
 import struct
+import subprocess
+import json
 
-ETC_CEPH = "/etc/ceph/"
+ETC_CEPH = "/etc/ceph"
 VAR_MON = "/var/lib/ceph/mon/ceph-"
 VAR_MGR = "/var/lib/ceph/mgr/ceph-"
+VAR_BOOTSTRAP_OSD = "/var/lib/ceph/bootstrap-osd"
+VAR_OSD = "/var/lib/ceph/osd"
+VAR_OSD_ID = "/var/lib/ceph/osd/ceph-"
+MON_KEYRING = "ceph.mon..keyring"
+OSD_KEYRING = "ceph.client.bootstrap-osd.keyring"
+ADMIN_KEYRING = "ceph.client.admin.keyring"
+CONFIG_FILE = "ceph.conf"
+AUTH = "cephx"
 
 
 def generate_auth_key() -> str:
@@ -116,3 +126,32 @@ def create_osd_key(folder: str) -> str:
         "client.bootstrap-osd",
         {"caps mon": "profile bootstrap-osd", "caps mgr": "allow r"},
     )
+
+
+def osd_status() -> dict:
+    """
+    Get the status of the OSDs
+
+    Returns:
+        Where the `int` is a number
+
+        >>> {'epoch': int,
+        ...  'num_osds': int,
+        ...  'num_up_osds': int,
+        ...  'osd_up_since': int,
+        ...  'num_in_osds': int,
+        ...  'osd_in_since': int,
+        ...  'num_remapped_pgs': int}
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.osd_status()
+        {'epoch': 1, 'num_osds': 5, 'num_up_osds': 5, 'osd_up_since': 1,
+        'num_in_osds': 5, 'osd_in_since': 1, 'num_remapped_pgs': 0}
+
+
+    """
+    status = subprocess.run(
+        ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE
+    )
+    return json.loads(status.stdout)
