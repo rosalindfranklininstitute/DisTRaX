@@ -32,9 +32,8 @@ class TestCeph:
         assert key1 != key2
 
     def test_create_keyring(self, folder_resource):
-        mon_key = ceph.create_keyring(TEST_FOLDER, "mon", {"caps mon": "allow *"})
-        assert mon_key == "ceph.mon.keyring"
-        with open(f"{TEST_FOLDER}/{mon_key}") as key:
-            assert key.readline() == "[mon]\n"
+        ceph.create_keyring(TEST_FOLDER, "mon.", {"caps mon": "allow *"})
+        with open(f"{TEST_FOLDER}/{ceph.MON_KEYRING}") as key:
+            assert key.readline() == "[mon.]\n"
             assert key.readline()  # Key-line which is unknown
             assert key.readline() == "caps mon = allow *\n"

@@ -26,7 +26,7 @@ def is_systemd() -> bool:
     return False
 
 
-def enable_service(service: str):
+def enable_service(service: str) -> None:
     """
     Enables systemd service
 
@@ -46,7 +46,7 @@ def enable_service(service: str):
         )
 
 
-def disable_service(service: str):
+def disable_service(service: str) -> None:
     """
     Disables systemd service
 
@@ -75,6 +75,7 @@ def is_systemd_service_enabled(service: str) -> bool:
 
     Returns:
         True if enabled else False
+
     Examples:
         >>> distrax.utils.system.is_systemd_service_enabled("enabled_service")
         True
@@ -92,7 +93,7 @@ def is_systemd_service_enabled(service: str) -> bool:
     return result.returncode == 0
 
 
-def start_service(service: str):
+def start_service(service: str) -> None:
     """
     Start systemd service
 
@@ -112,7 +113,7 @@ def start_service(service: str):
         )
 
 
-def stop_service(service: str):
+def stop_service(service: str) -> None:
     """
     Stops systemd service
 
@@ -120,7 +121,6 @@ def stop_service(service: str):
         service: The systemd service to stop running
 
     Examples:
-
         >>> distrax.utils.system.stop_service("service_to_stop")
     """
     if is_systemd():
@@ -144,7 +144,6 @@ def is_systemd_service_active(service: str) -> bool:
         True if enabled else False
 
     Examples:
-
         >>> distrax.utils.system.is_systemd_service_active("active_service")
         True
         >>> distrax.utils.system.is_systemd_service_active("stopped_service")
@@ -164,7 +163,9 @@ def is_systemd_service_active(service: str) -> bool:
 def free_memory() -> int:
     """
     Get the amount of free RAM available on the system
+
     Returns:
+        Amount of memory in KiB
 
     Examples:
         >>> free_memory()
@@ -175,3 +176,4 @@ def free_memory() -> int:
             if "MemFree" in line:
                 free_mem = line.split()[1]
                 return int(free_mem)
+    return 0

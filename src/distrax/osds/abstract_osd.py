@@ -1,8 +1,9 @@
-import abc
+from typing_extensions import Protocol, runtime_checkable
 from typing import List
 
 
-class AbstractOSD(metaclass=abc.ABCMeta):
+@runtime_checkable
+class AbstractOSD(Protocol):
     """
     An interface for OSD Classes
 
@@ -10,37 +11,14 @@ class AbstractOSD(metaclass=abc.ABCMeta):
 
     """
 
-    @classmethod
-    def __subclasshook__(cls, subclass):
-        """
-        Check if the functions are present and implemented in a subclass
-        This ensures that the abstract class is adhered to.
-
-        Args:
-            subclass: The class to check
-
-        Returns:
-            True if functions are present, otherwise False
-
-        """
-        return (
-            hasattr(subclass, "create_osds")
-            and callable(subclass.create_osds)
-            and hasattr(subclass, "remove_osds")
-            and callable(subclass.remove_osds)
-            or NotImplemented
-        )
-
-    @abc.abstractmethod
-    def create_osds(self, devices: List[str]):
+    def create_osds(self, devices: List[str]) -> None:
         """
         Create the OSD devices
         """
-        raise NotImplementedError
+        ...
 
-    @abc.abstractmethod
-    def remove_osds(self, devices: List[str]):
+    def remove_osds(self, devices: List[str]) -> None:
         """
         Remove the block devices created
         """
-        raise NotImplementedError
+        ...

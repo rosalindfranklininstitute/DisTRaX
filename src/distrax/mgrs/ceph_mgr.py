@@ -1,4 +1,3 @@
-from distrax.mgrs.abstract_mgr import AbstractMGR
 import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.system as system
@@ -6,7 +5,7 @@ import distrax.utils.network as network
 import subprocess
 
 
-class CephMGR(AbstractMGR):
+class CephMGR:
     """
     Ceph Manager Class
 
@@ -24,11 +23,10 @@ class CephMGR(AbstractMGR):
     """
 
     def __init__(self, folder: str = "ceph"):
-
         self.hostname = network.hostname()
         self.folder = folder
 
-    def create_mgr(self) -> bool:
+    def create_mgr(self) -> None:
         """
 
         Create the Ceph Manager Daemon
@@ -84,7 +82,7 @@ class CephMGR(AbstractMGR):
         )
         return "ceph.mgr.keyring"
 
-    def remove_mgr(self) -> bool:
+    def remove_mgr(self) -> None:
         """
         Remove the Ceph Manager Daemon
 

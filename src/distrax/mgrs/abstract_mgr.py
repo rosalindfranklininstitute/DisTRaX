@@ -1,7 +1,8 @@
-import abc
+from typing_extensions import Protocol, runtime_checkable
 
 
-class AbstractMGR(metaclass=abc.ABCMeta):
+@runtime_checkable
+class AbstractMGR(Protocol):
     """
     An interface for MON Classes
 
@@ -12,50 +13,14 @@ class AbstractMGR(metaclass=abc.ABCMeta):
     The only methods publicly visible to the user should be create_mgr and remove_mgr
     """
 
-    @classmethod
-    def __subclasshook__(cls, subclass):
-        """
-        Check if the functions are present and implemented in a subclass
-        This ensures that the abstract class is adhered to.
-        Args:
-            subclass: The class to check
-
-        Returns:
-            True if functions are present, otherwise False
-
-        """
-        return (
-            hasattr(subclass, "create_mgr")
-            and callable(subclass.create_mgr)
-            and hasattr(subclass, "remove_mgr")
-            and callable(subclass.remove_mgr)
-            or NotImplemented
-        )
-
-    @abc.abstractmethod
-    def create_mgr(self) -> bool:
+    def create_mgr(self) -> None:
         """
         Create the manager node
-
-        Raises:
-            NotImplementedError: until implemented
-
-        Returns:
-            True if mon is created, otherwise False
         """
-        raise NotImplementedError
+        ...
 
-    @abc.abstractmethod
-    def remove_mgr(self) -> bool:
+    def remove_mgr(self) -> None:
         """
         Remove the manager node
-
-        Stop and Disable the manager node
-
-        Raises:
-            NotImplementedError: until implemented
-
-        Returns:
-            True if mon is removed, otherwise False
         """
-        raise NotImplementedError
+        ...
