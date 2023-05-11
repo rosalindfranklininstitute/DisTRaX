@@ -143,6 +143,13 @@ def osd_status() -> dict:
         ...  'osd_in_since': int,
         ...  'num_remapped_pgs': int}
 
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.osd_status()
+        {'epoch': 1, 'num_osds': 5, 'num_up_osds': 5, 'osd_up_since': 1,
+        'num_in_osds': 5, 'osd_in_since': 1, 'num_remapped_pgs': 0}
+
+
     """
     status = subprocess.run(
         ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE

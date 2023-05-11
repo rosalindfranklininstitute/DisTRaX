@@ -18,3 +18,4 @@ Functions relevant to ceph operations
     create_admin_key
     create_mon_key
     create_osd_key
+    osd_status
