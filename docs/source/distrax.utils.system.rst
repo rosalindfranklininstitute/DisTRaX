@@ -20,3 +20,4 @@ Functions relevant to systemd
     is_systemd_service_enabled
     start_service
     stop_service
+    free_memory
