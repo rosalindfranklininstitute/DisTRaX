@@ -1,2 +1,1 @@
-from . import abstract_mon
-from . import ceph_mon
+from . import abstract_mon, ceph_mon

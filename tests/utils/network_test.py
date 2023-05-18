@@ -1,5 +1,6 @@
-import distrax.utils.network as network
 import pytest
+
+import distrax.utils.network as network
 
 
 class TestNetwork:

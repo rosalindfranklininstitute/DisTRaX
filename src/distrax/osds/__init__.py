@@ -1,2 +1,1 @@
-from . import abstract_osd
-from . import ceph_osd
+from . import abstract_osd, ceph_osd

@@ -1,7 +1,8 @@
-from distrax.utils.system import free_memory
-from distrax.exceptions.exceptions import NotEnoughMemoryError, DeviceCreationError
-import subprocess
 import os
+import subprocess
+
+from distrax.exceptions.exceptions import DeviceCreationError, NotEnoughMemoryError
+from distrax.utils.system import free_memory
 
 
 class BRDDevice:

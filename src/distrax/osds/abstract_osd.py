@@ -1,5 +1,6 @@
-from typing_extensions import Protocol, runtime_checkable
 from typing import List
+
+from typing_extensions import Protocol, runtime_checkable
 
 
 @runtime_checkable

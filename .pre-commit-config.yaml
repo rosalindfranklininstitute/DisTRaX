@@ -25,14 +25,26 @@ repos:
   rev: v1.3.0
   hooks:
     - id: mypy
+      exclude: tests
       args: [--strict, --ignore-missing-imports]
 
 
 - repo: https://github.com/pycqa/pydocstyle
   rev: 6.3.0
   hooks:
-  -   id: pydocstyle
+    - id: pydocstyle
       exclude: tests
       args:
         - --convention=google
         - --add-ignore=D100,D104,D200
+
+- repo: https://github.com/pycqa/isort
+  rev: 5.12.0
+  hooks:
+    - id: isort
+
+- repo: https://github.com/rubik/xenon
+  rev: v0.9.0
+  hooks:
+    - id: xenon
+      args: [ --max-absolute A, --max-modules A, --max-average A ]

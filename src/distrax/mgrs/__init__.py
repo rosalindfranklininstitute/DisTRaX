@@ -1,2 +1,1 @@
-from . import abstract_mgr
-from . import ceph_mgr
+from . import abstract_mgr, ceph_mgr

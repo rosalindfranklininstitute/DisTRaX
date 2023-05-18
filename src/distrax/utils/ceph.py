@@ -5,13 +5,13 @@ This holds all utility function for Ceph
 To read more about Ceph please see: https://docs.ceph.com/en/latest/
 """
 
-import secrets
-import time
 import base64
 import configparser
+import json
+import secrets
 import struct
 import subprocess
-import json
+import time
 from typing import Dict
 
 ETC_CEPH = "/etc/ceph"

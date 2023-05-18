@@ -1,7 +1,7 @@
-import socket
 import fcntl
-import struct
 import ipaddress
+import socket
+import struct
 
 
 def ip_address_from_network_interface(interface: str) -> str:
