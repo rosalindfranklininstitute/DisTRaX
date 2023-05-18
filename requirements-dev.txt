@@ -3,6 +3,7 @@ coverage
 flake8
 mypy
 pre-commit
+pydocstyle
 pytest
 sphinx
 sphinx-autodoc-typehints
