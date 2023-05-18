@@ -4,8 +4,7 @@ from typing import List
 
 
 def create_dir(path: str, mode: int) -> bool:
-    """
-    Create new directory with the path and mode specified
+    """Create new directory with the path and mode specified.
 
     Args:
         path: The path of the folder
@@ -25,8 +24,7 @@ def create_dir(path: str, mode: int) -> bool:
 
 
 def remove_dir(path: str) -> bool:
-    """
-    Remove a directory and contents of the path specified
+    """Remove a directory and contents of the path specified.
 
     Args:
         path: The path to the folder
@@ -48,8 +46,9 @@ def remove_dir(path: str) -> bool:
 
 
 def copy_file(src: str, dest: str) -> bool:
-    """
-    Copy a file from src to dest. Maintaining Permissions but no other metadata.
+    """Copy a file from src to dest.
+
+    Maintaining Permissions but no other metadata.
 
     Args:
         src: path to the file that will be copied
@@ -72,8 +71,7 @@ def copy_file(src: str, dest: str) -> bool:
 
 
 def remove_file(path: str) -> bool:
-    """
-    Remove a file at the path specified
+    """Remove a file at the path specified.
 
     Args:
         path: The path to the file that will be removed
@@ -95,8 +93,7 @@ def remove_file(path: str) -> bool:
 
 
 def change_ownership(path: str, user: str, group: str) -> bool:
-    """
-    Change the ownership of a file or directory
+    """Change the ownership of a file or directory.
 
     Args:
         path: path to file/directory to change
@@ -120,8 +117,7 @@ def change_ownership(path: str, user: str, group: str) -> bool:
 
 
 def recursive_change_ownership(path: str, user: str, group: str) -> bool:
-    """
-    Recursively change the ownership of a directory and the files within
+    """Recursively change the ownership of a directory and the files within.
 
     Args:
         path: path of directory to change ownership of
@@ -148,8 +144,7 @@ def recursive_change_ownership(path: str, user: str, group: str) -> bool:
 
 
 def change_permissions(path: str, mode: int) -> bool:
-    """
-    Change a files permission to the mode specified
+    """Change a files permission to the mode specified.
 
     Args:
         path: Path of the file to change
@@ -172,8 +167,7 @@ def change_permissions(path: str, mode: int) -> bool:
 
 
 def recursive_change_permissions(path: str, mode: int) -> bool:
-    """
-    Recursively change the permission to the mode specified of a directory and the files
+    """Recursively change the permissions of a directory and the files to the mode.
 
     Args:
         path: Path of the file to change
@@ -201,8 +195,7 @@ def recursive_change_permissions(path: str, mode: int) -> bool:
 def append_file_in_folder(
     folder: str, file_to_update: str, files_to_append: List[str]
 ) -> None:
-    """
-    Append file_to_update with the files in files_to_append.
+    r"""Append file_to_update with the files in files_to_append.
 
     Write the contents of the files_to_append into the file_to_update, the files must be
     from the same folder.

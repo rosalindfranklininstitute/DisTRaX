@@ -4,8 +4,7 @@ import os
 
 
 def is_systemd() -> bool:
-    """
-    Check if the system is using systemd
+    """Check if the system is using systemd.
 
     Returns:
         True if the system uses systemd else False
@@ -27,8 +26,7 @@ def is_systemd() -> bool:
 
 
 def enable_service(service: str) -> None:
-    """
-    Enables systemd service
+    """Enables systemd service.
 
     Args:
         service: The systemd service to enable
@@ -47,8 +45,7 @@ def enable_service(service: str) -> None:
 
 
 def disable_service(service: str) -> None:
-    """
-    Disables systemd service
+    """Disables systemd service.
 
     Args:
         service: The systemd service to disable
@@ -67,8 +64,7 @@ def disable_service(service: str) -> None:
 
 
 def is_systemd_service_enabled(service: str) -> bool:
-    """
-    Check if systemd service is enabled or not
+    """Check if systemd service is enabled or not.
 
     Args:
         service: The systemd process to check
@@ -94,8 +90,7 @@ def is_systemd_service_enabled(service: str) -> bool:
 
 
 def start_service(service: str) -> None:
-    """
-    Start systemd service
+    """Start systemd service.
 
     Args:
         service: The systemd service to start
@@ -114,8 +109,7 @@ def start_service(service: str) -> None:
 
 
 def stop_service(service: str) -> None:
-    """
-    Stops systemd service
+    """Stops systemd service.
 
     Args:
         service: The systemd service to stop running
@@ -134,8 +128,7 @@ def stop_service(service: str) -> None:
 
 
 def is_systemd_service_active(service: str) -> bool:
-    """
-    Check if systemd service is active or not
+    """Check if systemd service is active or not.
 
     Args:
         service: The systemd process to check
@@ -161,8 +154,7 @@ def is_systemd_service_active(service: str) -> bool:
 
 
 def free_memory() -> int:
-    """
-    Get the amount of free RAM available on the system
+    """Get the amount of free RAM available on the system.
 
     Returns:
         Amount of memory in KiB

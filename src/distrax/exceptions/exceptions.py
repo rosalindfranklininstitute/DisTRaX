@@ -1,20 +1,22 @@
 class NotEnoughMemoryError(Exception):
-    """
-    Error for when more memory is requested than is available
-
-    """
+    """Error for when more memory is requested than is available."""
 
     def __init__(self, message: str):
-        # Call the base class constructor with the parameters it needs
+        """Call the base class constructor with the parameters it needs.
+
+        Args:
+            message: Message to display
+        """
         super().__init__(message)
 
 
 class DeviceCreationError(Exception):
-    """
-    When the creation of the Block device fails
-
-    """
+    """When the creation of the Block device fails."""
 
     def __init__(self, message: str):
-        # Call the base class constructor with the parameters it needs
+        """Call the base class constructor with the parameters it needs.
+
+        Args:
+            message: Message to display
+        """
         super().__init__(message)

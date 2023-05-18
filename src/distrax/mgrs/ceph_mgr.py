@@ -6,39 +6,42 @@ import subprocess
 
 
 class CephMGR:
-    """
-    Ceph Manager Class
+    """Ceph Manager Class.
 
     This class contains all the methods required to create and remove a Ceph Manager
 
-    Args:
-        folder (`str`, optional): The folder to place files created
-
-    Attributes:
-        hostname (str): The hostname of the machine
-        folder (str): The folder to place files created
+    To read more about the Ceph Manager please see:
+    https://docs.ceph.com/en/latest/glossary/#term-Ceph-Manager
 
     Examples:
         >>> mgr = CephMGR()
+
+        >>> mgr = CephMGR(folder="distrax")
     """
 
     def __init__(self, folder: str = "ceph"):
+        """Initialise the CephMGR object.
+
+        Args:
+            folder: the location to store the keys of the ceph system
+
+        Examples:
+        >>> mgr = CephMGR()
+
+        >>> mgr = CephMGR(folder="distrax")
+        """
         self.hostname = network.hostname()
         self.folder = folder
 
     def create_mgr(self) -> None:
-        """
-
-        Create the Ceph Manager Daemon
+        """Create the Ceph Manager Daemon.
 
         This Daemon operates with the monitor to provide additional
         monitoring and interfacing to external tools.
 
         Examples:
             >>> mgr.create_mgr()
-
         """
-
         # Create key
         mgr_keyring = self._add_mgr()
         # Create MGR directory
@@ -55,8 +58,9 @@ class CephMGR:
         system.start_service(f"ceph-mgr@{self.hostname}")
 
     def _add_mgr(self) -> str:
-        """
-        Adds the manager keys to the ceph system, the settings allow the mgr to access
+        """Adds the manager keys to the ceph system.
+
+        The settings allow the mgr to access
         the Object Storage Devices (osd) and Metadata Sever (MDS) and Monitor.
 
         Returns: the name of the keyring ceph.mgr.keyring
@@ -83,8 +87,7 @@ class CephMGR:
         return "ceph.mgr.keyring"
 
     def remove_mgr(self) -> None:
-        """
-        Remove the Ceph Manager Daemon
+        """Remove the Ceph Manager Daemon.
 
         Examples:
             >>> mgr.remove_mgr()

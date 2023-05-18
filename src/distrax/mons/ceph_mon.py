@@ -10,44 +10,48 @@ import subprocess
 
 
 class CephMON:
-    """
-    Ceph Monitor Class
+    """Ceph Monitor Class.
 
     This class contains all the methods required to create and remove a Ceph Monitor
+
+    To read more about the Ceph Monitor please see:
+    https://docs.ceph.com/en/latest/glossary/#term-Ceph-Monitor
+
+    Examples:
+        >>> mon = CephMON()
+
+        >>> mon = CephMON(folder="distrax")
+
     """
 
     def __init__(self, folder: str = "ceph") -> None:
-        """
-        Initialise the CephMON object
+        """Initialise the CephMON object.
 
         Args:
-            folder: the place to place the keys of the ceph system
+            folder: the location to store the keys of the ceph system
 
         Examples:
-            >>> ceph_mon = CephMON()
+            >>> mon = CephMON()
         """
         self.hostname = network.hostname()
-        self.fsid: str
-        self.ip: str
-        self.ip_netmask: str
+        self.fsid: str = ""
+        self.ip: str = ""
+        self.ip_netmask: str = ""
         self.folder = folder
 
     def create_mon(self, interface: str) -> None:
-        """
-        Create the Ceph Monitor daemon
+        """Create the Ceph Monitor daemon.
 
         Args:
             interface: the network interface the cluster will be using.
 
         Examples:
-            >>> ceph_mon.create_mon("lo")
+            >>> mon.create_mon("lo")
         """
-
         # Get system details
         self.fsid = str(uuid.uuid4().hex)
         self.ip = network.ip_address_from_network_interface(interface)
         self.ip_netmask = network.ip_with_netmask(self.ip)
-        self.hostname = network.hostname()
         # Create required self.folders
         fileio.create_dir(f"{ceph.VAR_MON}{self.hostname}", 0o755)
         fileio.create_dir(self.folder, 0o775)
@@ -86,10 +90,7 @@ class CephMON:
         subprocess.run(["ceph", "mon", "enable-msgr2"])
 
     def _create_cluster(self) -> None:
-        """
-        Create the Ceph Cluster with the monitor node
-        """
-
+        """Create the Ceph Cluster with the monitor node."""
         subprocess.run(
             [
                 "ceph-mon",
@@ -106,13 +107,11 @@ class CephMON:
         )
 
     def _create_monmap(self) -> None:
-        """
-        Run's the ceph tool monmap to create the monmap for the cluster
+        """Run's the ceph tool monmap to create the monmap for the cluster.
 
         Returns:
             A ceph.monmap file in the folder location.
         """
-
         subprocess.run(
             [
                 "monmaptool",
@@ -128,13 +127,11 @@ class CephMON:
         )
 
     def _write_config_file(self) -> None:
-        """
-        Write the config file for ceph
+        """Write the config file for ceph.
 
         Returns:
             A file in the folder specified as ceph.conf
         """
-
         config = configparser.ConfigParser()
         config["global"] = {
             "fsid": self.fsid,
@@ -156,11 +153,10 @@ class CephMON:
             config.write(configfile)
 
     def remove_mon(self) -> None:
-        """
-        Remove the Ceph monitor
+        """Remove the Ceph monitor.
 
         Examples:
-            >>> ceph_mon.remove_mon()
+            >>> mon.remove_mon()
         """
         system.stop_service("ceph-mon.target")
         system.disable_service("ceph-mon.target")
