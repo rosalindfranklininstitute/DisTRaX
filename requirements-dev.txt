@@ -12,3 +12,4 @@ sphinx-book-theme
 sphinx-remove-toctrees
 sphinx_copybutton
 sphinx_design
+xenon
