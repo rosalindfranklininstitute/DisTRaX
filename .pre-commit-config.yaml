@@ -32,8 +32,13 @@ repos:
 - repo: https://github.com/pycqa/pydocstyle
   rev: 6.3.0
   hooks:
-  -   id: pydocstyle
+    - id: pydocstyle
       exclude: tests
       args:
         - --convention=google
         - --add-ignore=D100,D104,D200
+
+- repo: https://github.com/pycqa/isort
+  rev: 5.12.0
+  hooks:
+    - id: isort
