@@ -5,8 +5,7 @@ import ipaddress
 
 
 def ip_address_from_network_interface(interface: str) -> str:
-    """
-    Get the ip address either the inet4 or 6 from the network interface provided.
+    """Get the ip address either the inet4 or 6 from the network interface provided.
 
     Args:
         interface: the network interface i.e. eth0, ib0, etc
@@ -34,8 +33,7 @@ def ip_address_from_network_interface(interface: str) -> str:
 
 
 def hostname() -> str:
-    """
-    Get the hostname of the system
+    """Get the hostname of the system.
 
     Returns:
         The hostname of the machine
@@ -48,8 +46,7 @@ def hostname() -> str:
 
 
 def ip_with_netmask(ip_address: str) -> str:
-    """
-    From the ip address get the netmask.
+    """From the ip address get the netmask.
 
     Args:
         ip_address: the address to get the netmask added to

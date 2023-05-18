@@ -5,9 +5,8 @@ import os
 
 
 class BRDDevice:
-    """
-    BRDDevice class this allows for the creation of the
-    and removal of the block device.
+    """BRDDevice class this allows for the creation and removal of the RAM block device.
+
     It is important to note that this device uses system memory
     and the block devices will be found at /dev/ram{number}
 
@@ -15,9 +14,9 @@ class BRDDevice:
         >>> device = BRDDevice()
     """
 
-    def create_device(self, size: int, number: int = 1) -> None:
-        """
-        Create BRD Block Device
+    @staticmethod
+    def create_device(size: int, number: int = 1) -> None:
+        """Create BRD Block Device.
 
         Args:
             size: number representing a GiB, i.e 4 would mean 4GiB
@@ -59,9 +58,9 @@ class BRDDevice:
                 "DisTRaX again"
             )
 
-    def remove_device(self) -> None:
-        """
-        Removes the BRD device from the systems
+    @staticmethod
+    def remove_device() -> None:
+        """Removes the BRD device from the systems.
 
         Examples:
             >>> device.remove_device()

@@ -7,31 +7,33 @@ from typing import List
 
 
 class CephOSD:
-    """
-    Class for the creation and removal of Ceph OSDs
+    """Class for the creation and removal of Ceph OSDs.
+
+    To read more about the Ceph OSD please see:
+    https://docs.ceph.com/en/latest/glossary/#term-Ceph-OSD
+
+    Examples:
+        >>> osd = CephOSD()
+
+        >>> osd = CephOSD(folder="distrax")
     """
 
     def __init__(self, folder: str = "ceph"):
-        """
-        Initialise the CephOSD object
+        """Initialise the CephOSD object.
 
         Args:
             folder: the place to place the keys of the ceph system
-
-        Examples:
-            >>> ceph_osd = CephOSD()
         """
         self.folder = folder
 
     def create_osds(self, devices: List[str]) -> None:
-        """
-        Create the OSDs devices
+        """Create the OSDs devices.
 
         Args:
-            devices: The device names to turn into OSDs
+            devices: The device names to turn into OSDs.
 
         Examples:
-            >>> CephOSD().create_osds(["/dev/ram0", "/dev/ram1"])
+            >>> osd.create_osds(["/dev/ram0", "/dev/ram1"])
         """
         # Create needed directories for OSDs to run on the system
         fileio.create_dir(ceph.VAR_BOOTSTRAP_OSD, 0o755)
@@ -61,14 +63,13 @@ class CephOSD:
             subprocess.run(["ceph-volume", "lvm", "create", "--data", device])
 
     def remove_osds(self, devices: List[str]) -> None:
-        """
-        Remove the OSDs devices from the system
+        """Remove the OSDs devices from the system.
 
         Args:
             devices: The device names to turn into OSDs
 
         Examples:
-            >>> CephOSD().remove_osds(["/dev/ram0", "/dev/ram1"])
+            >>> osd.remove_osds(["/dev/ram0", "/dev/ram1"])
         """
         # Get OSD_ids from the host system
         osd_ids = glob.glob(f"{ceph.VAR_OSD_ID}*")

@@ -1,3 +1,10 @@
+"""Ceph Utility functions.
+
+This holds all utility function for Ceph
+
+To read more about Ceph please see: https://docs.ceph.com/en/latest/
+"""
+
 import secrets
 import time
 import base64
@@ -21,8 +28,7 @@ AUTH = "cephx"
 
 
 def generate_auth_key() -> str:
-    """
-    Generate Ceph Auth Key
+    """Generate Ceph Auth Key.
 
     This is informed from:
     https://github.com/ceph/ceph-deploy/blob/master/ceph_deploy/new.py
@@ -49,14 +55,12 @@ def generate_auth_key() -> str:
 
 
 def create_keyring(folder: str, name: str, permissions: Dict[str, str]) -> None:
-    """
-    Creates a Ceph Keyring file and writes the keyring with the permissions passed
+    r"""Creates a Ceph Keyring file and writes the keyring with the permissions passed.
 
     Args:
         folder: folder to place keyring
         name: Name of the keyring
-        permissions: arguments for the keyring i.e {"caps mon": "allow *"}
-
+        permissions: arguments for the keyring i.e {"caps mon": "allow \*"}
 
     Examples:
         >>> import distrax.utils.ceph as ceph
@@ -74,8 +78,7 @@ def create_keyring(folder: str, name: str, permissions: Dict[str, str]) -> None:
 
 
 def create_admin_key(folder: str) -> None:
-    """
-    Helper function for creating admin_keyring
+    """Helper function for creating admin_keyring.
 
     Args:
         folder: folder to place keyring
@@ -96,8 +99,7 @@ def create_admin_key(folder: str) -> None:
 
 
 def create_mon_key(folder: str) -> None:
-    """
-    Helper function for creating mon_keyring
+    """Helper function for creating mon_keyring.
 
     Args:
         folder: folder to place keyring
@@ -107,8 +109,7 @@ def create_mon_key(folder: str) -> None:
 
 
 def create_osd_key(folder: str) -> None:
-    """
-    Helper function for creating osd_keyring
+    """Helper function for creating osd_keyring.
 
     Args:
         folder: folder to place keyring
@@ -122,8 +123,7 @@ def create_osd_key(folder: str) -> None:
 
 
 def osd_status() -> Dict[str, int]:
-    """
-    Get the status of the OSDs
+    """Get the status of the OSDs.
 
     Returns:
         Where the `int` is a number
@@ -141,7 +141,6 @@ def osd_status() -> Dict[str, int]:
         >>> ceph.osd_status()
         {'epoch': 1, 'num_osds': 5, 'num_up_osds': 5, 'osd_up_since': 1,
         'num_in_osds': 5, 'osd_in_since': 1, 'num_remapped_pgs': 0}
-
 
     """
     status = subprocess.run(
