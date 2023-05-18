@@ -1,7 +1,9 @@
-import distrax.utils.ceph as ceph
-import pytest
 import os
 import shutil
+
+import pytest
+
+import distrax.utils.ceph as ceph
 
 TEST_FOLDER = "TEST_FOLDER"
 

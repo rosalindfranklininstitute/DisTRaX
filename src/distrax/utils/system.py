@@ -1,6 +1,6 @@
+import os
 import re
 import subprocess
-import os
 
 
 def is_systemd() -> bool:

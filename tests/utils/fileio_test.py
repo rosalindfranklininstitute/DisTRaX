@@ -1,11 +1,13 @@
-from pathlib import Path
-import distrax.utils.fileio as fileio
-import pytest
-import os
-import stat
-import shutil
-import pwd
 import grp
+import os
+import pwd
+import shutil
+import stat
+from pathlib import Path
+
+import pytest
+
+import distrax.utils.fileio as fileio
 
 TEST_FOLDER = "TEST_FOLDER"
 TEST_SUB_FOLDER = TEST_FOLDER + "/" + TEST_FOLDER
