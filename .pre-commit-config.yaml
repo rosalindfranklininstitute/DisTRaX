@@ -26,3 +26,13 @@ repos:
   hooks:
     - id: mypy
       args: [--strict, --ignore-missing-imports]
+
+
+- repo: https://github.com/pycqa/pydocstyle
+  rev: 6.3.0
+  hooks:
+  -   id: pydocstyle
+      exclude: tests
+      args:
+        - --convention=google
+        - --add-ignore=D100,D104,D200
