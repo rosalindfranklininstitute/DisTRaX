@@ -12,7 +12,7 @@ import secrets
 import struct
 import subprocess
 import time
-from typing import Dict
+from typing import Dict, List, TypedDict, Union
 
 ETC_CEPH = "/etc/ceph"
 VAR_MON = "/var/lib/ceph/mon/ceph-"
@@ -147,3 +147,120 @@ def osd_status() -> Dict[str, int]:
         ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE
     )
     return dict(json.loads(status.stdout))
+
+
+def lspools(timeout: str = "5") -> List[Dict[str, str]]:
+    """Get the current pools.
+
+    Args:
+        timeout: The length of time to try and connect to the cluster.
+
+    Returns:
+        A list of dictionaries containing the keys 'poolnum' and 'poolname'
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.lspools()
+        [{'poolnum': 1, 'poolname': '.mgr',
+        'poolnum': 2, 'poolname': 'test'}]
+
+    """
+    pools = subprocess.run(
+        ["ceph", "osd", "lspools", "--format", "json", "--connect-timeout", timeout],
+        stdout=subprocess.PIPE,
+    )
+    if pools.returncode != 0:
+        return []
+    return list(json.loads(pools.stdout))
+
+
+class PoolStatus(TypedDict):
+    """PoolStatus Type."""
+
+    pgs_by_state: List[Dict[str, Union[int, str]]]
+    num_pgs: int
+    num_pools: int
+    num_objects: int
+    data_bytes: int
+    bytes_used: int
+    bytes_avail: int
+    bytes_total: int
+
+
+def pool_status(
+    timeout: str = "5",
+) -> PoolStatus:
+    """Get the status of the Pools.
+
+    Args:
+        timeout: The length of time to try and connect to the cluster.
+
+    `ceph -s` is used instead of `ceph pg stat` as `ceph pg stat` is faster to record
+    the status, and such does not mirror `ceph -s`. Therefore, as `ceph -s` is the
+    default way to check the status of the ceph cluster it is used to
+    maintain cohesion with system outputs.
+
+    Returns:
+        Where 'int' is a number and 'str' is a string
+
+        >>> {'pgs_by_state': [{'state_name':str,'count': int}],
+        ... 'num_pgs': int,
+        ... 'num_pools': int,
+        ... 'num_objects': int,
+        ... 'data_bytes': int,
+        ... 'bytes_used': int,
+        ... 'bytes_avail': int,
+        ... 'bytes_total': int
+        ...}
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.pool_status()
+        {'pgs_by_state': [{'state_name': 'active+clean', 'count': 65}],
+         'num_pgs': 65,
+         'num_pools': 3,
+         'num_objects': 2,
+         'data_bytes': 590368,
+         'bytes_used': 13357056,
+         'bytes_avail': 1056190464,
+         'bytes_total': 1069547520}
+    """
+    status = subprocess.run(
+        ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
+        stdout=subprocess.PIPE,
+    )
+    state = dict(json.loads(status.stdout))
+    pgmap: PoolStatus = PoolStatus(
+        pgs_by_state=state["pgmap"]["pgs_by_state"],
+        num_pgs=state["pgmap"]["num_pgs"],
+        num_pools=state["pgmap"]["num_pools"],
+        num_objects=state["pgmap"]["num_objects"],
+        data_bytes=state["pgmap"]["data_bytes"],
+        bytes_used=state["pgmap"]["bytes_used"],
+        bytes_avail=state["pgmap"]["bytes_avail"],
+        bytes_total=state["pgmap"]["bytes_total"],
+    )
+    return pgmap
+
+
+def get_current_pg() -> int:
+    """Get the current pg count of the cluster.
+
+    Returns:
+        The current PGs in the cluster
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.get_current_pg()
+        1
+
+    """
+    current_cluster_pgs: int
+    if len(lspools()) == 0:
+        # Account for the '.mgr' pool that will be created
+        current_cluster_pgs = 1
+    else:
+        pg_summary = pool_status()
+        pg_num: int = pg_summary["num_pgs"]
+        current_cluster_pgs = int(pg_num)
+    return int(current_cluster_pgs)
