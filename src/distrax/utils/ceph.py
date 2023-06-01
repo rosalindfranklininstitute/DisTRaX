@@ -257,11 +257,9 @@ def get_current_pg() -> int:
 
     """
     current_cluster_pgs: int
-    if len(lspools()) == 0:
+    if len(lspools()) == 0 or pool_status()["num_pgs"] == 0:
         # Account for the '.mgr' pool that will be created
         current_cluster_pgs = 1
     else:
-        pg_summary = pool_status()
-        pg_num: int = pg_summary["num_pgs"]
-        current_cluster_pgs = int(pg_num)
-    return int(current_cluster_pgs)
+        current_cluster_pgs = pool_status()["num_pgs"]
+    return current_cluster_pgs
