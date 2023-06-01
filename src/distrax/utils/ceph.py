@@ -263,3 +263,30 @@ def get_current_pg() -> int:
     else:
         current_cluster_pgs = pool_status()["num_pgs"]
     return current_cluster_pgs
+
+
+def rgw_status(
+    timeout: str = "5",
+) -> bool:
+    """Get the status of the RGW.
+
+    Args:
+        timeout: The length of time to try and connect to the cluster.
+
+    Returns:
+        Where 'int' is a number and 'str' is a string
+
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.rgw_status()
+    """
+    status = subprocess.run(
+        ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
+        stdout=subprocess.PIPE,
+    )
+    state = dict(json.loads(status.stdout))
+    servicemap = state["servicemap"]
+    if "rgw" in servicemap["services"].keys():
+        return True
+    return False
