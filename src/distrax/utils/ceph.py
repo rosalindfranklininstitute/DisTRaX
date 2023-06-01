@@ -291,3 +291,31 @@ def rgw_status(
     if "rgw" in servicemap["services"].keys():
         return True
     return False
+
+
+def mds_status(
+    timeout: str = "5",
+) -> bool:
+    """Get the status of the MDS.
+
+    Args:
+        timeout: The length of time to try and connect to the cluster.
+
+    Returns:
+        True when it is up and running False otherwise
+
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.mds_status()
+            True
+    """
+    status = subprocess.run(
+        ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
+        stdout=subprocess.PIPE,
+    )
+    state = dict(json.loads(status.stdout))
+    fsmap = state["fsmap"]
+    if fsmap["up"] == 1 and fsmap["in"] == 1:
+        return True
+    return False
