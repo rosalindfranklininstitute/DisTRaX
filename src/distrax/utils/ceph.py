@@ -275,7 +275,7 @@ def rgw_status(
         timeout: The length of time to try and connect to the cluster.
 
     Returns:
-        Where 'int' is a number and 'str' is a string
+        True when it is up and running False otherwise
 
 
     Examples:
