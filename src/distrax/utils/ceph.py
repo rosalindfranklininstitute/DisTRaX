@@ -317,5 +317,7 @@ def mds_status(
     state = dict(json.loads(status.stdout))
     fsmap = state["fsmap"]
     if fsmap["up"] == 1 and fsmap["in"] == 1:
-        return True
+        for fs in fsmap["by_rank"]:
+            if fs["status"] == "up:active":
+                return True
     return False
