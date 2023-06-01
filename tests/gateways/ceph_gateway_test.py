@@ -2,10 +2,10 @@ from distrax.gateways.abstract_gateway import AbstractGateway
 from distrax.gateways.ceph_gateway import CephGateway
 
 
-class TestCephPool:
+class TestCephGateway:
 
     """
-    Testing CephOSD
+    Testing CephGateway
     """
 
     def test_is_subclass_of_abstract_gateway(self):
