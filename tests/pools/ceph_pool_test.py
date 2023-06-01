@@ -5,7 +5,7 @@ from distrax.pools.ceph_pool import CephPool
 class TestCephPool:
 
     """
-    Testing CephOSD
+    Testing CephPool
     """
 
     def test_is_subclass_of_abstract_osd(self):
