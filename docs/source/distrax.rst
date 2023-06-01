@@ -15,4 +15,5 @@ Subpackages
    distrax.devices
    distrax.osds
    distrax.pools
+   distrax.gateways
    distrax.exceptions

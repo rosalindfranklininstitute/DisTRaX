@@ -13,6 +13,7 @@ Functions relevant to ceph operations
 .. autosummary::
   :toctree: _autosummary
 
+    PoolStatus
     generate_auth_key
     create_keyring
     create_admin_key
@@ -22,3 +23,4 @@ Functions relevant to ceph operations
     pool_status
     lspools
     get_current_pg
+    rgw_status

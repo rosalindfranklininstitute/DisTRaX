@@ -20,6 +20,7 @@ VAR_MGR = "/var/lib/ceph/mgr/ceph-"
 VAR_BOOTSTRAP_OSD = "/var/lib/ceph/bootstrap-osd"
 VAR_OSD = "/var/lib/ceph/osd"
 VAR_OSD_ID = "/var/lib/ceph/osd/ceph-"
+VAR_RGW: str = "/var/lib/ceph/radosgw/ceph-radosgw."
 MON_KEYRING = "ceph.mon..keyring"
 OSD_KEYRING = "ceph.client.bootstrap-osd.keyring"
 ADMIN_KEYRING = "ceph.client.admin.keyring"
@@ -256,11 +257,36 @@ def get_current_pg() -> int:
 
     """
     current_cluster_pgs: int
-    if len(lspools()) == 0:
+    if len(lspools()) == 0 or pool_status()["num_pgs"] == 0:
         # Account for the '.mgr' pool that will be created
         current_cluster_pgs = 1
     else:
-        pg_summary = pool_status()
-        pg_num: int = pg_summary["num_pgs"]
-        current_cluster_pgs = int(pg_num)
-    return int(current_cluster_pgs)
+        current_cluster_pgs = pool_status()["num_pgs"]
+    return current_cluster_pgs
+
+
+def rgw_status(
+    timeout: str = "5",
+) -> bool:
+    """Get the status of the RGW.
+
+    Args:
+        timeout: The length of time to try and connect to the cluster.
+
+    Returns:
+        Where 'int' is a number and 'str' is a string
+
+
+    Examples:
+        >>> import distrax.utils.ceph as ceph
+        >>> ceph.rgw_status()
+    """
+    status = subprocess.run(
+        ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
+        stdout=subprocess.PIPE,
+    )
+    state = dict(json.loads(status.stdout))
+    servicemap = state["servicemap"]
+    if "rgw" in servicemap["services"].keys():
+        return True
+    return False
