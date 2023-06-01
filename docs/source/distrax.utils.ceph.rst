@@ -24,3 +24,4 @@ Functions relevant to ceph operations
     lspools
     get_current_pg
     rgw_status
+    mds_status
