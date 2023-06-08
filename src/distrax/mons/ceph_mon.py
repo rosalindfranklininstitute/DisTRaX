@@ -4,10 +4,10 @@ import subprocess
 import uuid
 
 import distrax.utils.ceph as ceph
-import distrax.utils.fileio
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.mons import MON
 
 
 class CephMON:
@@ -65,7 +65,7 @@ class CephMON:
         ceph.create_mon_key(self.folder)
         ceph.create_admin_key(self.folder)
         ceph.create_osd_key(self.folder)
-        distrax.utils.fileio.append_file_in_folder(
+        fileio.append_file_in_folder(
             self.folder, ceph.MON_KEYRING, [ceph.ADMIN_KEYRING, ceph.OSD_KEYRING]
         )
         # Create Monmap
@@ -163,3 +163,6 @@ class CephMON:
         system.disable_service("ceph-mon.target")
         system.stop_service("system-ceph\\x2dmon.slice")
         fileio.remove_dir(f"{ceph.VAR_MON}{self.hostname}")
+
+
+_mon = MON(name="ceph", MON=CephMON)

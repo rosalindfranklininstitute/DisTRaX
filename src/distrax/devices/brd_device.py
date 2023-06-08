@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+from distrax.devices import DEVICE
 from distrax.exceptions.exceptions import DeviceCreationError, NotEnoughMemoryError
 from distrax.utils.system import free_memory
 
@@ -71,3 +72,6 @@ class BRDDevice:
         subprocess.run(
             ["rmmod", "brd"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
+
+
+_device = DEVICE("brd", BRDDevice)

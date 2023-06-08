@@ -14,3 +14,7 @@
 
 .. autosummary::
   :toctree: _autosummary
+
+    AVAILABLE
+    set_osd
+    get_osd

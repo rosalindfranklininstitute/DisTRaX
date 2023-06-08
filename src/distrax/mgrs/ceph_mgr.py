@@ -4,6 +4,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.mgrs import MGR
 
 
 class CephMGR:
@@ -97,3 +98,6 @@ class CephMGR:
         system.disable_service("ceph-mgr.target")
         system.stop_service("system-ceph\\x2dmgr.slice")
         fileio.remove_dir(f"{ceph.VAR_MGR}{self.hostname}")
+
+
+_mgr = MGR(name="ceph", MGR=CephMGR)

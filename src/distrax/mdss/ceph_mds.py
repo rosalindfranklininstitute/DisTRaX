@@ -5,6 +5,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.mdss import MDS
 from distrax.pools.ceph_pool import CephPool
 
 
@@ -129,3 +130,6 @@ class CephMDS:
         system.disable_service("ceph-mds.target")
         system.stop_service("system-ceph\\x2dmds.slice")
         fileio.remove_dir(f"{ceph.VAR_MDS}{self.hostname}")
+
+
+_mds = MDS("ceph", CephMDS)

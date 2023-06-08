@@ -4,6 +4,7 @@ from math import floor, log
 from typing import Union
 
 import distrax.utils.ceph as ceph
+from distrax.pools import POOL
 
 
 class CephPool:
@@ -88,3 +89,6 @@ class CephPool:
                     "5",
                 ]
             )
+
+
+_pool = POOL("ceph", CephPool)

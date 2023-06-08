@@ -14,3 +14,7 @@
 
 .. autosummary::
   :toctree: _autosummary
+
+    AVAILABLE
+    set_mon
+    get_mon
