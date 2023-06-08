@@ -5,6 +5,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.gateways import GATEWAY
 from distrax.pools.ceph_pool import CephPool
 
 
@@ -140,3 +141,6 @@ class CephGateway:
         system.disable_service("ceph-radosgw.target")
         system.stop_service("system-ceph\\x2radosgw.slice")
         fileio.remove_dir(f"{ceph.VAR_RGW}{self.hostname}")
+
+
+_gateway = GATEWAY("ceph", CephGateway)

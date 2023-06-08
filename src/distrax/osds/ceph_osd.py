@@ -5,6 +5,7 @@ from typing import List
 import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.system as system
+from distrax.osds import OSD
 
 
 class CephOSD:
@@ -77,7 +78,9 @@ class CephOSD:
         # Set OSDs to out to ensure safe removal
         for osd_id in osd_ids:
             osd_id = osd_id.strip(ceph.VAR_OSD_ID)
-            subprocess.run(["ceph", "osd", "out", str(osd_id)])
+            subprocess.run(
+                ["ceph", "osd", "out", str(osd_id), "--connect-timeout", "5"]
+            )
             system.stop_service(f"ceph-osd@{osd_id}")
             system.stop_service(f"var-lib-ceph-osd-ceph\\x2d{osd_id}.mount")
         # Stop OSDs service
@@ -96,3 +99,6 @@ class CephOSD:
         system.stop_service("system-ceph\\x2dosd.slice")
         fileio.remove_dir(ceph.VAR_BOOTSTRAP_OSD)
         fileio.remove_dir(ceph.VAR_OSD)
+
+
+_osd = OSD("ceph", CephOSD)

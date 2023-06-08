@@ -3,6 +3,7 @@ import subprocess
 import time
 
 import distrax.utils.fileio as fileio
+from distrax.filesystems import FILESYSTEM
 
 
 class CephFilesystem:
@@ -54,7 +55,6 @@ class CephFilesystem:
         while mounted is False:
             subprocess.run(
                 [
-                    "sudo",
                     "mount",
                     "-t",
                     "ceph",
@@ -76,6 +76,9 @@ class CephFilesystem:
             >>> filesystem.unmount_filesystem()
         """
         # Unmount filesystem
-        subprocess.run(["sudo", "umount", self.mount_point])
+        subprocess.run(["umount", self.mount_point])
         # Remove directory
         fileio.remove_dir(self.mount_point)
+
+
+_filesystem = FILESYSTEM("ceph", CephFilesystem)
