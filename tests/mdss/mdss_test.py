@@ -9,12 +9,12 @@ class TestMDSs:
 
     def test_is_subclass_of_abstract_mds(self):
         for mds in mdss.AVAILABLE:
-            mdss.use_mds(mds)
-            manager = mdss.get_mds(mds)
-            assert issubclass(manager.MDS, AbstractMDS)
+            mdss.set_mds(mds)
+            meta = mdss.get_mds(mds)
+            assert issubclass(meta.MDS, AbstractMDS)
 
     def test_instance_of_abstract_mds(self):
         for mds in mdss.AVAILABLE:
-            mdss.use_mds(mds)
-            manager = mdss.get_mds(mds)
-            assert isinstance(manager.MDS(), AbstractMDS)
+            mdss.set_mds(mds)
+            meta = mdss.get_mds(mds)
+            assert isinstance(meta.MDS(), AbstractMDS)

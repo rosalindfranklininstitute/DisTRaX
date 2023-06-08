@@ -9,12 +9,12 @@ class TestOSDs:
 
     def test_is_subclass_of_abstract_osd(self):
         for osd in osds.AVAILABLE:
-            osds.use_osd(osd)
+            osds.set_osd(osd)
             object_storage_device = osds.get_osd(osd)
             assert issubclass(object_storage_device.OSD, AbstractOSD)
 
     def test_instance_of_abstract_osd(self):
         for osd in osds.AVAILABLE:
-            osds.use_osd(osd)
+            osds.set_osd(osd)
             object_storage_device = osds.get_osd(osd)
             assert isinstance(object_storage_device.OSD(), AbstractOSD)

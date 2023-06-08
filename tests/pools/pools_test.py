@@ -9,12 +9,12 @@ class TestPools:
 
     def test_is_subclass_of_abstract_pool(self):
         for pool in pools.AVAILABLE:
-            pools.use_pool(pool)
-            manager = pools.get_pool(pool)
-            assert issubclass(manager.POOL, AbstractPool)
+            pools.set_pool(pool)
+            set_pool = pools.get_pool(pool)
+            assert issubclass(set_pool.POOL, AbstractPool)
 
     def test_instance_of_abstract_pool(self):
         for pool in pools.AVAILABLE:
-            pools.use_pool(pool)
-            manager = pools.get_pool(pool)
-            assert isinstance(manager.POOL(), AbstractPool)
+            pools.set_pool(pool)
+            set_pool = pools.get_pool(pool)
+            assert isinstance(set_pool.POOL(), AbstractPool)

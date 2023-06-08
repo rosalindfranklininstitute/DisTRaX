@@ -10,12 +10,12 @@ class TestFilesystems:
 
     def test_is_subclass_of_abstract_filesystem(self):
         for filesystem in filesystems.AVAILABLE:
-            filesystems.use_filesystem(filesystem)
-            manager = filesystems.get_filesystem(filesystem)
-            assert issubclass(manager.FILESYSTEM, AbstractFilesystem)
+            filesystems.set_filesystem(filesystem)
+            fs = filesystems.get_filesystem(filesystem)
+            assert issubclass(fs.FILESYSTEM, AbstractFilesystem)
 
     def test_instance_of_abstract_filesystem(self):
         for filesystem in filesystems.AVAILABLE:
-            filesystems.use_filesystem(filesystem)
-            manager = filesystems.get_filesystem(filesystem)
-            assert isinstance(manager.FILESYSTEM(), AbstractFilesystem)
+            filesystems.set_filesystem(filesystem)
+            fs = filesystems.get_filesystem(filesystem)
+            assert isinstance(fs.FILESYSTEM(), AbstractFilesystem)
