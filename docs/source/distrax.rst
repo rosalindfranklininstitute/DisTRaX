@@ -9,7 +9,6 @@ Subpackages
 .. toctree::
    :maxdepth: 1
 
-   distrax.utils
    distrax.mons
    distrax.mgrs
    distrax.devices
@@ -19,3 +18,4 @@ Subpackages
    distrax.mdss
    distrax.filesystems
    distrax.exceptions
+   distrax.utils
