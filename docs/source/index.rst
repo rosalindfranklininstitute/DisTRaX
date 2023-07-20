@@ -11,4 +11,5 @@ Welcome to DisTRaX's documentation!
    :hidden:
 
    Home Page <self>
+   DisTRaX Quickstart <quickstart>
    API reference <distrax>
