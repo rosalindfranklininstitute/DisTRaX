@@ -18,7 +18,7 @@ The action defines what you would like DisTRaX to do, whether to build, aka `cre
 
 Config
 ======
-DisTRaX uses a config file to hold all the options of the cluster. The file consists of three main parts SETUP, RAM and SERVICE, where a SERVICE is a `Pool`, `Gateway` or `Filesystem`:
+DisTRaX uses a config file to hold all the options of the cluster. The file consists of two main parts SETUP, RAM:
 
 
 Setup
@@ -30,16 +30,67 @@ The Setup section has four required inputs and is used to configure the storage 
 * folder: The folder to store system details (must exist on all hosts)
 * Interface: This is the network interface the cluster will communicate over (must exist on all hosts)
 * number_of_hosts: The number of nodes used to form the cluster.
+* service: This can either be pool, gateway or filesystem
 
 .. code-block::
-   :caption: Setup section config example: distrax.cfg
+   :caption: Setup section config example with pool service: distrax.cfg
 
     [setup]
     backend = ceph
     folder = my_ceph
     interface = lo
     number_of_hosts = 1
+    service = pool
 
+Service
+-------
+
+This system supports three services, `Pool`, `Gateway` or `Filesystem`.
+
+Pool
+~~~~
+A pool is the simplest way to store objects and has the least overhead of all the services as it talks directly to the object storage device.
+To read more, see the ceph docs `https://docs.ceph.com/en/latest/rados/operations/pools/ <https://docs.ceph.com/en/latest/rados/operations/pools/>`_
+
+
+.. code-block::
+   :caption: Pool section config example: distrax.cfg
+
+    service=pool
+
+This will create a cluster with pool name of distrax.
+
+Gateway
+~~~~~~~
+
+The gateway creates a Restful S3 API-accessible object-store. To read more about S3 see `https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html <https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html>`_
+
+
+.. code-block::
+   :caption: Gateway section config example: distrax.cfg
+
+    service = gateway
+
+The gateway will create a user named distrax along with a credentials file inside the specified folder which will contain, the username, access_key, secret_key and endpoint information
+
+.. code-block::
+   :caption: credentials file example
+
+    [default]
+    user = distrax
+    access_key = 8TSNGCP3P1376H2USM12
+    secret_key = YvNtEBAhiOB4AfczjXHZKPvPHCXECckMRE32rDBy
+    endpoint = http://127.0.0.1:7480/
+
+Filesystem
+~~~~~~~~~~
+
+This creates and mounts a filesystem at a /mnt/distrax.
+
+.. code-block::
+   :caption: Filesystem section config example: distrax.cfg
+
+    service = filesystem
 
 Ram
 ---
@@ -70,68 +121,6 @@ Whereas this creates 1 OSD with a size of 10GB
     number = 1
 
 
-Service
--------
-
-This system supports three services, `Pool`, `Gateway` or `Filesystem`. Within the configuration file is an order of importance such that  `Pool` > `Gateway` > `Filesystem`; therefore, if `Pool` is defined, this will be executed, and any other service will not.
-
-Pool
-~~~~
-A pool is the simplest way to store objects and has the least overhead of all the services as it talks directly to the object storage device.
-To read more, see the ceph docs `https://docs.ceph.com/en/latest/rados/operations/pools/ <https://docs.ceph.com/en/latest/rados/operations/pools/>`_
-
-The pool only has one required input:
-
-* Name: The name of the pool to access
-
-.. code-block::
-   :caption: Pool section config example: distrax.cfg
-
-    [pool]
-    name = distrax
-
-
-Gateway
-~~~~~~~
-
-The gateway creates a Restful S3 API-accessible object-store. To read more about S3 see `https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html <https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html>`_
-
-
-The gateway has three required inputs, and these are used to create S3 credentials to access the gateway:
-
-* id: The identifier for the access key
-* access_key: S3 access_key credential
-* secret_key: S3 secret_key credential
-
-Please note that you should not use keys that are used by any other system.
-
-.. code-block::
-   :caption: Gateway section config example: distrax.cfg
-
-    [gateway]
-    id = distrax
-    access_key = distrax
-    secret_key = distrax
-
-
-Filesystem
-~~~~~~~~~~
-
-The creates and mounts a filesystem at a specified mount point. It takes one input.
-
-* mount_point: The location to mount the filesystem within /mnt.
-
-
-.. code-block::
-   :caption: Filesystem section config example: distrax.cfg
-
-    [filesystem]
-    mount_point = distrax
-
-
-This will mount a file system at /mnt/distrax
-
-
 Device
 ------
 
@@ -145,7 +134,7 @@ This outlines which Block devices to use.
 Examples
 ========
 
-We would use the following configuration file to create a ceph cluster on our local system using 1GB of RAM with 1 OSD and a pool with the name `test`.
+We would use the following configuration file to create a ceph cluster on our local system using 1GB of RAM with 1 OSD and a pool.
 
 .. code-block::
    :caption: Config example: distrax.cfg
@@ -155,14 +144,12 @@ We would use the following configuration file to create a ceph cluster on our lo
     folder = my_ceph
     interface = lo
     number_of_hosts = 1
+    service = pool
 
     [ram]
     type = brd
     number = 1
     size_in_gb = 1
-
-    [pool]
-    name = test
 
 
 To build the cluster, we would use
