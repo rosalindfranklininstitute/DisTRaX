@@ -11,7 +11,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e .
-          pip install sphinx sphinx-autodoc-typehints sphinx-remove-toctrees \
+          pip install sphinx==6.* sphinx-autodoc-typehints sphinx-remove-toctrees \
           sphinx_design sphinx-book-theme sphinx_copybutton
       - name: Sphinx build
         run: |

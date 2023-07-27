@@ -6,7 +6,7 @@ mypy
 pre-commit
 pydocstyle
 pytest
-sphinx
+sphinx==6.*
 sphinx-autodoc-typehints
 sphinx-book-theme
 sphinx-remove-toctrees
