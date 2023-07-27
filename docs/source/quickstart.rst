@@ -18,8 +18,8 @@ The action defines what you would like DisTRaX to do, whether to build, aka `cre
 
 Config
 ======
-DisTRaX uses a config file to hold all the options of the cluster. The file consists of two main parts SETUP, RAM:
 
+DisTRaX uses a config file to hold all the options of the cluster. The file consists of two main parts SETUP, RAM:
 
 Setup
 ------
@@ -30,6 +30,7 @@ The Setup section has four required inputs and is used to configure the storage 
 * folder: The folder to store system details (must exist on all hosts)
 * Interface: This is the network interface the cluster will communicate over (must exist on all hosts)
 * number_of_hosts: The number of nodes used to form the cluster.
+
 * service: This can either be pool, gateway or filesystem
 
 .. code-block::
@@ -52,10 +53,9 @@ Pool
 A pool is the simplest way to store objects and has the least overhead of all the services as it talks directly to the object storage device.
 To read more, see the ceph docs `https://docs.ceph.com/en/latest/rados/operations/pools/ <https://docs.ceph.com/en/latest/rados/operations/pools/>`_
 
-
 .. code-block::
    :caption: Pool section config example: distrax.cfg
-
+   
     service=pool
 
 This will create a cluster with pool name of distrax.
@@ -64,7 +64,6 @@ Gateway
 ~~~~~~~
 
 The gateway creates a Restful S3 API-accessible object-store. To read more about S3 see `https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html <https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html>`_
-
 
 .. code-block::
    :caption: Gateway section config example: distrax.cfg
@@ -150,7 +149,6 @@ We would use the following configuration file to create a ceph cluster on our lo
     type = brd
     number = 1
     size_in_gb = 1
-
 
 To build the cluster, we would use
 
