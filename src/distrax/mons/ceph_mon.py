@@ -1,5 +1,4 @@
 import configparser
-import os
 import subprocess
 import uuid
 
@@ -7,6 +6,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.exceptions.exceptions import ClusterExistsError, DaemonNotStartedError
 from distrax.mons import MON
 
 
@@ -49,17 +49,28 @@ class CephMON:
         Examples:
             >>> mon.create_mon("lo")
         """
+        ceph_state = subprocess.run(
+            ["ceph", "-s", "--connect-timeout", "3"],
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        )
+        if ceph_state.returncode != 1:
+            raise ClusterExistsError(
+                f"Ceph Cluster Exists: \r\n {ceph_state.stdout.decode('utf-8')}"
+            )
         # Get system details
         self.fsid = str(uuid.uuid4().hex)
         self.ip = network.ip_address_from_network_interface(interface)
         self.ip_netmask = network.ip_with_netmask(self.ip)
         # Create required self.folders
-        fileio.create_dir(f"{ceph.VAR_MON}{self.hostname}", 0o755)
-        fileio.create_dir(self.folder, 0o775)
+        fileio.create_dir(f"{ceph.VAR_MON}{self.hostname}", 755, admin=True)
+        fileio.create_dir(self.folder, 775)
         # Write config
         self._write_config_file()
         fileio.copy_file(
-            f"{self.folder}/{ceph.CONFIG_FILE}", f"{ceph.ETC_CEPH}/{ceph.CONFIG_FILE}"
+            f"{self.folder}/{ceph.CONFIG_FILE}",
+            f"{ceph.ETC_CEPH}/{ceph.CONFIG_FILE}",
+            admin=True,
         )
         # Create keys
         ceph.create_mon_key(self.folder)
@@ -70,30 +81,36 @@ class CephMON:
         )
         # Create Monmap
         self._create_monmap()
-        fileio.recursive_change_ownership(self.folder, os.getlogin(), os.getlogin())
         # Create Cluster
         self._create_cluster()
         # Copy files
         fileio.copy_file(
             f"{self.folder}/{ceph.MON_KEYRING}",
             f"{ceph.VAR_MON}{self.hostname}/keyring",
+            admin=True,
         )
         fileio.recursive_change_ownership(
-            f"{ceph.VAR_MON}{self.hostname}", "ceph", "ceph"
+            f"{ceph.VAR_MON}{self.hostname}", "ceph", "ceph", admin=True
         )
         fileio.copy_file(
             f"{self.folder}/{ceph.ADMIN_KEYRING}",
             f"{ceph.ETC_CEPH}/{ceph.ADMIN_KEYRING}",
+            admin=True,
         )
 
         # Start Monitor
         system.start_service(f"ceph-mon@{self.hostname}")
-        subprocess.run(["ceph", "mon", "enable-msgr2"])
+        status = system.is_systemd_service_active(f"ceph-mon@{self.hostname}")
+        if status is False:
+            message = "Ceph Monitor Failed to Start, please investigate"
+            raise DaemonNotStartedError(message)
+        subprocess.run(["ceph", "mon", "enable-msgr2", "--connect-timeout", "3"])
 
     def _create_cluster(self) -> None:
         """Create the Ceph Cluster with the monitor node."""
         subprocess.run(
             [
+                "sudo",
                 "ceph-mon",
                 "--cluster",
                 "ceph",
@@ -162,7 +179,10 @@ class CephMON:
         system.stop_service("ceph-mon.target")
         system.disable_service("ceph-mon.target")
         system.stop_service("system-ceph\\x2dmon.slice")
-        fileio.remove_dir(f"{ceph.VAR_MON}{self.hostname}")
+        system.stop_service("ceph.target")
+        fileio.remove_dir(f"{ceph.VAR_MON}{self.hostname}", admin=True)
+        fileio.remove_file(f"{ceph.VAR_RUN}mon.{self.hostname}.asok")
+        fileio.remove_dir(self.folder)
 
 
 _mon = MON(name="ceph", MON=CephMON)
