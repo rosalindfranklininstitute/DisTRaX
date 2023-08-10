@@ -18,11 +18,6 @@ class AbstractOSD(Protocol):
         """
         ...
 
-    def remove_osds(self, devices: List[str]) -> None:
-        """Remove the block devices created.
-
-        Args:
-            devices: A list of block devices files names,
-                e.g. /dev/nvme0n1p1 or /dev/ram0
-        """
+    def remove_osds(self) -> None:
+        """Remove the OSDs created."""
         ...
