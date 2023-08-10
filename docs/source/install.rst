@@ -51,7 +51,16 @@ If you have any questions or queries surrounding this, please raise an issue on 
 
 Ceph
 ++++
-The following block is the sudoers file required for distrax to be able to deploy a Ceph storage cluster. Please copy this or the version in the github repo to `/etc/sudoers.d/`
+
+Installing Ceph
+~~~~~~~~~~~~~~~~
+
+Ensure that the ceph packages are available on every host that you plan to run DisTRaX on. Ceph's guide to install the packages is found here: https://docs.ceph.com/en/latest/install/get-packages/
+
+Ceph Sudoers File
+~~~~~~~~~~~~~~~~~
+
+The following block is the sudoers file required for distrax to be able to deploy a Ceph storage cluster. Please copy this or the version in the github repo https://github.com/rosalindfranklininstitute/DisTRaX/blob/main/sudeors/distrax-ceph to `/etc/sudoers.d/` on every host you plan to use DisTRaX on.
 
 .. code-block::
    :caption: distrax-ceph sudoers
