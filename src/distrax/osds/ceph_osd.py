@@ -9,6 +9,8 @@ import distrax.utils.fileio as fileio
 import distrax.utils.system as system
 from distrax.osds import OSD
 
+logger = logging.getLogger(__name__)
+
 
 class CephOSD:
     """Class for the creation and removal of Ceph OSDs.
@@ -68,7 +70,10 @@ class CephOSD:
         )
         # Create the OSDs using ceph-volume
         for device in devices:
-            subprocess.run(["ceph-volume", "lvm", "create", "--data", device])
+            subprocess.run(
+                ["sudo", "ceph-volume", "lvm", "create", "--data", device],
+            )
+            logger.info(f"Created {device} OSD")
 
     def remove_osds(self) -> None:
         """Remove the OSDs devices from the system.
