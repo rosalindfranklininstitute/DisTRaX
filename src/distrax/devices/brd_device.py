@@ -92,9 +92,14 @@ class BRDDevice:
             # Removes the BRD block device from the system.
 
         """
-        subprocess.run(
-            ["rmmod", "brd"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
+        if os.path.exists("/dev/ram0"):
+            subprocess.run(
+                [
+                    "sudo",
+                    "rmmod",
+                    "brd",
+                ]
+            )
 
 
 _device = DEVICE("brd", BRDDevice)
