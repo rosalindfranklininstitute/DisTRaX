@@ -110,6 +110,7 @@ class CephMON:
         """Create the Ceph Cluster with the monitor node."""
         subprocess.run(
             [
+                "sudo",
                 "ceph-mon",
                 "--cluster",
                 "ceph",
