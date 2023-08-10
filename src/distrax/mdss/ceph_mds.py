@@ -52,14 +52,16 @@ class CephMDS:
         # Create key
         mds_keyring = self._add_mds()
         # Create MDS directory
-        fileio.create_dir(f"{ceph.VAR_MDS}{self.hostname}", 0o755)
+        fileio.create_dir(f"{ceph.VAR_MDS}{self.hostname}", 755, admin=True)
         # Copy the key to the folder
         fileio.copy_file(
-            f"{self.folder}/{mds_keyring}", f"{ceph.VAR_MDS}{self.hostname}/keyring"
+            f"{self.folder}/{mds_keyring}",
+            f"{ceph.VAR_MDS}{self.hostname}/keyring",
+            admin=True,
         )
         # Change the ownership of the folder to ceph
         fileio.recursive_change_ownership(
-            f"{ceph.VAR_MDS}{self.hostname}", "ceph", "ceph"
+            f"{ceph.VAR_MDS}{self.hostname}", "ceph", "ceph", admin=True
         )
         # Start the Daemon
         system.start_service(f"ceph-mds@{self.hostname}")
