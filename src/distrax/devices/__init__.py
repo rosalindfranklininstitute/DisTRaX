@@ -31,7 +31,7 @@ def set_device(device: str) -> None:
     if device in AVAILABLE:
         module_ = import_module(f"distrax.devices.{device}_device")
         if hasattr(module_, "_device"):
-            log.debug("Switching manger to `%s`", module_._device.name)
+            log.debug("Switching device to `%s`", module_._device.name)
             _current = module_._device
         else:
             raise Exception(f"Module `{device}` is not configured correctly.")
