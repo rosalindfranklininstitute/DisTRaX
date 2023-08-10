@@ -18,7 +18,7 @@ class CephPool:
     """
 
     @staticmethod
-    def create_pool(name: str, percentage: float) -> None:
+    def create_pool(name: str = "distrax", percentage: float = 1.0) -> None:
         """Create the Pool to store objects.
 
         Args:
