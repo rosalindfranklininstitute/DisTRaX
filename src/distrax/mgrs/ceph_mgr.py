@@ -4,6 +4,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.exceptions.exceptions import DaemonNotStartedError
 from distrax.mgrs import MGR
 
 
@@ -58,6 +59,10 @@ class CephMGR:
         )
         # Start the Daemon
         system.start_service(f"ceph-mgr@{self.hostname}")
+        status = system.is_systemd_service_active(f"ceph-mgr@{self.hostname}")
+        if status is False:
+            message = "Ceph Manager Failed to Start, please investigate"
+            raise DaemonNotStartedError(message)
 
     def _add_mgr(self) -> str:
         """Adds the manager keys to the ceph system.
