@@ -84,10 +84,20 @@ class CephFilesystem:
         Examples:
             >>> filesystem.unmount_filesystem()
         """
-        # Unmount filesystem
-        subprocess.run(["umount", self.mount_point])
-        # Remove directory
-        fileio.remove_dir(self.mount_point)
+        port = "6789"
+        config = configparser.ConfigParser()
+        config.read(f"{self.folder}/ceph.conf")
+        mon_ip = config["global"]["mon host"]
+        mon_mount = mon_ip + f":{port}:/"
+        mounts = subprocess.run(
+            ["findmnt", "-t", "ceph", "--json"], stdout=subprocess.PIPE
+        )
+        mount_dict = json.loads(mounts.stdout)
+        if "filesystems" in mount_dict:
+            for filesystems in mount_dict["filesystems"]:
+                if filesystems["source"] == mon_mount:
+                    subprocess.run(["sudo", "umount", filesystems["target"]])
+        fileio.remove_dir(self.mount_point, admin=True)
 
 
 _filesystem = FILESYSTEM("ceph", CephFilesystem)
