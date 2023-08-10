@@ -1,4 +1,4 @@
-from typing import Protocol, runtime_checkable
+from typing import List, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -15,6 +15,18 @@ class AbstractDevice(Protocol):
             size: The size of the blocks' device in GibiBytes i.e. 1 would be 1GiB
             number: Number of block devices to create, i.e. 4 will create 4 devices
                         of the size stated
+        """
+        ...
+
+    @staticmethod
+    def get_paths(number: int) -> List[str]:
+        """Get the paths of the devices created.
+
+        Args:
+            number: number of devices created
+
+        Returns:
+            List of Device Paths, i.e. /dev/ram0,/dev/ram1
         """
         ...
 
