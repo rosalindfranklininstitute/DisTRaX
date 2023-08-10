@@ -35,13 +35,13 @@ def enable_service(service: str) -> None:
         >>> distrax.utils.system.enable_service("service_to_enable")
     """
     if is_systemd():
-        subprocess.run(
-            [
-                "systemctl",
-                "enable",
-                "{service}".format(service=service),
-            ]
-        )
+        command = [
+            "sudo",
+            "systemctl",
+            "enable",
+            "{service}".format(service=service),
+        ]
+        subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def disable_service(service: str) -> None:
@@ -54,13 +54,13 @@ def disable_service(service: str) -> None:
         >>> distrax.utils.system.disable_service("service_to_disable")
     """
     if is_systemd():
-        subprocess.run(
-            [
-                "systemctl",
-                "disable",
-                "{service}".format(service=service),
-            ]
-        )
+        command = [
+            "sudo",
+            "systemctl",
+            "disable",
+            f"{service}".format(service=service),
+        ]
+        subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def is_systemd_service_enabled(service: str) -> bool:
@@ -99,13 +99,13 @@ def start_service(service: str) -> None:
         >>> distrax.utils.system.start_service("service_to_start")
     """
     if is_systemd():
-        subprocess.run(
-            [
-                "systemctl",
-                "start",
-                "{service}".format(service=service),
-            ]
-        )
+        command = [
+            "sudo",
+            "systemctl",
+            "start",
+            "{service}".format(service=service),
+        ]
+        subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def stop_service(service: str) -> None:
@@ -118,13 +118,13 @@ def stop_service(service: str) -> None:
         >>> distrax.utils.system.stop_service("service_to_stop")
     """
     if is_systemd():
-        subprocess.run(
-            [
-                "systemctl",
-                "stop",
-                "{service}".format(service=service),
-            ]
-        )
+        command = [
+            "sudo",
+            "systemctl",
+            "stop",
+            "{service}".format(service=service),
+        ]
+        subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def is_systemd_service_active(service: str) -> bool:

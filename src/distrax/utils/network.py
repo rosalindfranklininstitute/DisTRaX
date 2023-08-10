@@ -1,7 +1,10 @@
 import fcntl
 import ipaddress
+import logging
 import socket
 import struct
+
+logger = logging.getLogger(__name__)
 
 
 def ip_address_from_network_interface(interface: str) -> str:
@@ -24,9 +27,13 @@ def ip_address_from_network_interface(interface: str) -> str:
     SIOCGIFADDR = 0x8915
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     bytes_version_interface = struct.pack("256s", interface.encode("utf_8"))
-    packed_addr = fcntl.ioctl(sock.fileno(), SIOCGIFADDR, bytes_version_interface)[
-        20:24
-    ]
+    try:
+        packed_addr = fcntl.ioctl(sock.fileno(), SIOCGIFADDR, bytes_version_interface)[
+            20:24
+        ]
+    except OSError as error:
+        logger.error(f"Interface `{interface}` does not exists")
+        raise (error)
     sock.close()
     ip_address = socket.inet_ntop(socket.AF_INET, packed_addr)
     return ip_address
