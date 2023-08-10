@@ -100,7 +100,11 @@ class CephMON:
 
         # Start Monitor
         system.start_service(f"ceph-mon@{self.hostname}")
-        subprocess.run(["ceph", "mon", "enable-msgr2"])
+        status = system.is_systemd_service_active(f"ceph-mon@{self.hostname}")
+        if status is False:
+            message = "Ceph Monitor Failed to Start, please investigate"
+            raise DaemonNotStartedError(message)
+        subprocess.run(["ceph", "mon", "enable-msgr2", "--connect-timeout", "3"])
 
     def _create_cluster(self) -> None:
         """Create the Ceph Cluster with the monitor node."""
