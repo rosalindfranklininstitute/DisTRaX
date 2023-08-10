@@ -1,14 +1,16 @@
 import os
 import shutil
+import subprocess
 from typing import List
 
 
-def create_dir(path: str, mode: int) -> bool:
+def create_dir(path: str, mode: int, admin: bool = False) -> bool:
     """Create new directory with the path and mode specified.
 
     Args:
         path: The path of the folder
         mode: The permissions of the directory using linux access codes
+        admin: To run under escalted privileges
 
     Returns:
         True if successful else False
@@ -16,36 +18,50 @@ def create_dir(path: str, mode: int) -> bool:
     Examples:
         >>> distrax.utils.fileio.create_dir("directory_path", 664)
     """
-    if not os.path.exists(path):
-        os.mkdir(path=path, mode=mode)
-        return True
-    else:
+    if os.path.exists(path) is True:
         return False
+    command = ""
+    if admin:
+        command += "sudo "
+    command += f"mkdir -p -m {mode} {path}"
+    command_lst = command.split()
+    process = subprocess.run(
+        command_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    if process.returncode != 0:
+        return False
+    return True
 
 
-def remove_dir(path: str) -> bool:
+def remove_dir(path: str, admin: bool = False) -> bool:
     """Remove a directory and contents of the path specified.
 
     Args:
         path: The path to the folder
+        admin: To run under escalted privileges
 
     Returns:
         True if successful else False
-
     Examples:
         >>> distrax.utils.fileio.remove_dir("folder_exists")
         True
         >>> distrax.utils.fileio.remove_dir("non_existent_folder")
         False
     """
-    if os.path.exists(path):
-        shutil.rmtree(path)
-        return True
-    else:
+    command = ""
+    if admin:
+        command += "sudo "
+    command += f"find {path} -mindepth 0 -delete"
+    command_lst = command.split()
+    process = subprocess.run(
+        command_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    if process.returncode != 0:
         return False
+    return True
 
 
-def copy_file(src: str, dest: str) -> bool:
+def copy_file(src: str, dest: str, admin: bool = False) -> bool:
     """Copy a file from src to dest.
 
     Maintaining Permissions but no other metadata.
@@ -53,6 +69,7 @@ def copy_file(src: str, dest: str) -> bool:
     Args:
         src: path to the file that will be copied
         dest: Destination of the file
+        admin: To run under escalted privileges
 
     Returns:
         True if successful else False
@@ -63,18 +80,25 @@ def copy_file(src: str, dest: str) -> bool:
         >>> distrax.utils.fileio.copy_file("non_existent_file", "./new_file")
         False
     """
-    if os.path.exists(src):
-        shutil.copy(src, dest)
-        return True
-    else:
+    command = ""
+    if admin:
+        command += "sudo "
+    command += f"cp {src} {dest}"
+    command_lst = command.split()
+    process = subprocess.run(
+        command_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    if process.returncode != 0:
         return False
+    return True
 
 
-def remove_file(path: str) -> bool:
+def remove_file(path: str, admin: bool = False) -> bool:
     """Remove a file at the path specified.
 
     Args:
         path: The path to the file that will be removed
+        admin: To run under escalted privileges
 
     Returns:
         True if successful else False
@@ -85,44 +109,63 @@ def remove_file(path: str) -> bool:
         >>> distrax.utils.fileio.remove_file("non_existent_file")
         False
     """
+    command = ""
+    if admin:
+        command += "sudo "
     if os.path.exists(path):
-        os.remove(path)
+        command += f"find {path} -mindepth 0 -delete"
+        command_lst = command.split()
+        process = subprocess.run(
+            command_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        if process.returncode != 0:
+            return False
         return True
     else:
         return False
 
 
-def change_ownership(path: str, user: str, group: str) -> bool:
+def change_ownership(path: str, user: str, group: str, admin: bool = False) -> bool:
     """Change the ownership of a file or directory.
 
     Args:
         path: path to file/directory to change
         user: the user to change ownership to
         group: the group to change ownership to
+        admin: To run under escalted privileges
 
     Returns:
         True if successful else False
 
     Examples:
-        >>> distrax.utils.fileio.change_ownership("file","user","grp")
+        >>> distrax.utils.fileio.change_ownership("file",user="user",group="grp")
         True
-        >>> distrax.utils.fileio.change_ownership("no_file","usr","grp")
+        >>> distrax.utils.fileio.change_ownership("no_file",user="user",group="grp")
         False
     """
-    if os.path.exists(path):
-        shutil.chown(path, user, group)
-        return True
-    else:
+    command = ""
+    if admin:
+        command += "sudo "
+    command += f"chown {user}:{group} {path}"
+    command_lst = command.split()
+    process = subprocess.run(
+        command_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    if process.returncode != 0:
         return False
+    return True
 
 
-def recursive_change_ownership(path: str, user: str, group: str) -> bool:
+def recursive_change_ownership(
+    path: str, user: str, group: str, admin: bool = False
+) -> bool:
     """Recursively change the ownership of a directory and the files within.
 
     Args:
         path: path of directory to change ownership of
         user: the user to change ownership to
         group: the group to change ownership to
+        admin: To run under escalted privileges
 
     Returns:
         True if successful else False
@@ -135,9 +178,9 @@ def recursive_change_ownership(path: str, user: str, group: str) -> bool:
     """
     if os.path.isdir(path):
         for dir_path, _, filenames in os.walk(path):
-            change_ownership(dir_path, user, group)
+            change_ownership(dir_path, user, group, admin)
             for filename in filenames:
-                change_ownership(os.path.join(dir_path, filename), user, group)
+                change_ownership(os.path.join(dir_path, filename), user, group, admin)
         return True
     else:
         return False
