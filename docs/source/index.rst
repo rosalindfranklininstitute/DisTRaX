@@ -13,4 +13,5 @@ Welcome to DisTRaX's documentation!
    Home Page <self>
    Installing DisTRaX <install>
    DisTRaX Quickstart <quickstart>
+   Message to Sysadmins <message_to_sysadmins>
    API reference <distrax>
