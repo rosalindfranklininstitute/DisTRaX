@@ -63,12 +63,14 @@ class CephMON:
         self.ip = network.ip_address_from_network_interface(interface)
         self.ip_netmask = network.ip_with_netmask(self.ip)
         # Create required self.folders
-        fileio.create_dir(f"{ceph.VAR_MON}{self.hostname}", 0o755)
-        fileio.create_dir(self.folder, 0o775)
+        fileio.create_dir(f"{ceph.VAR_MON}{self.hostname}", 755, admin=True)
+        fileio.create_dir(self.folder, 775)
         # Write config
         self._write_config_file()
         fileio.copy_file(
-            f"{self.folder}/{ceph.CONFIG_FILE}", f"{ceph.ETC_CEPH}/{ceph.CONFIG_FILE}"
+            f"{self.folder}/{ceph.CONFIG_FILE}",
+            f"{ceph.ETC_CEPH}/{ceph.CONFIG_FILE}",
+            admin=True,
         )
         # Create keys
         ceph.create_mon_key(self.folder)
@@ -85,13 +87,15 @@ class CephMON:
         fileio.copy_file(
             f"{self.folder}/{ceph.MON_KEYRING}",
             f"{ceph.VAR_MON}{self.hostname}/keyring",
+            admin=True,
         )
         fileio.recursive_change_ownership(
-            f"{ceph.VAR_MON}{self.hostname}", "ceph", "ceph"
+            f"{ceph.VAR_MON}{self.hostname}", "ceph", "ceph", admin=True
         )
         fileio.copy_file(
             f"{self.folder}/{ceph.ADMIN_KEYRING}",
             f"{ceph.ETC_CEPH}/{ceph.ADMIN_KEYRING}",
+            admin=True,
         )
 
         # Start Monitor
@@ -170,7 +174,10 @@ class CephMON:
         system.stop_service("ceph-mon.target")
         system.disable_service("ceph-mon.target")
         system.stop_service("system-ceph\\x2dmon.slice")
-        fileio.remove_dir(f"{ceph.VAR_MON}{self.hostname}")
+        system.stop_service("ceph.target")
+        fileio.remove_dir(f"{ceph.VAR_MON}{self.hostname}", admin=True)
+        fileio.remove_file(f"{ceph.VAR_RUN}mon.{self.hostname}.asok")
+        fileio.remove_dir(self.folder)
 
 
 _mon = MON(name="ceph", MON=CephMON)
