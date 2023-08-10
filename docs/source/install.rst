@@ -16,7 +16,7 @@ To pip install the distrax program use the following:
 .. code-block::
    :caption: pip install distrax
 
-    pip install "git+https://github.com/rosalindfranklininstitute/DisTRaX.git#egg=distrax"
+    pip install -e git+https://github.com/rosalindfranklininstitute/DisTRaX.git#egg=distrax
 
 Creating the DisTRaX Group
 --------------------------
