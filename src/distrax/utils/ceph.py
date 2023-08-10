@@ -15,6 +15,7 @@ import time
 from typing import Dict, List, TypedDict, Union
 
 ETC_CEPH = "/etc/ceph"
+VAR_RUN = "/var/run/ceph/ceph-"
 VAR_MON = "/var/lib/ceph/mon/ceph-"
 VAR_MGR = "/var/lib/ceph/mgr/ceph-"
 VAR_BOOTSTRAP_OSD = "/var/lib/ceph/bootstrap-osd"
