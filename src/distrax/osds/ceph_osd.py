@@ -138,7 +138,7 @@ class CephOSD:
             pvs = pv.split(",")  # PV, VG
             if pvs[1][:4] == "ceph":
                 subprocess.run(
-                    ["sudo", "ceph-volume", "lvm", "zap", "--destroy", pv[0]],
+                    ["sudo", "ceph-volume", "lvm", "zap", "--destroy", pvs[0]],
                 )
         # Get ceph-volume services
         osd_services = glob.glob(
