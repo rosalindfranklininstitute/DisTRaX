@@ -1,1 +1,12 @@
-from . import devices, exceptions, mgrs, mons, utils
+from . import (
+    devices,
+    exceptions,
+    filesystems,
+    gateways,
+    mdss,
+    mgrs,
+    mons,
+    osds,
+    pools,
+    utils,
+)
