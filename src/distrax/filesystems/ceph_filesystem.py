@@ -56,6 +56,7 @@ class CephFilesystem:
         while mounted is False:
             subprocess.run(
                 [
+                    "sudo",
                     "mount",
                     "-t",
                     "ceph",
