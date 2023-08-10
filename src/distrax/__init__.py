@@ -1,5 +1,5 @@
 from . import (
-    config,
+    configs,
     devices,
     exceptions,
     filesystems,

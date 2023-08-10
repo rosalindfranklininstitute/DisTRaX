@@ -5,7 +5,7 @@ import sys
 import time
 from typing import Any, Dict
 
-import distrax.config.parser as parser
+import distrax.configs.parser as parser
 import distrax.devices as devices
 import distrax.exceptions.exceptions as exceptions
 import distrax.filesystems as filesystems
