@@ -17,17 +17,8 @@ class AbstractGateway(Protocol):
         """Create the gateway node."""
         ...
 
-    @staticmethod
-    def create_s3_user(
-        id: str = "admin", access_key: str = "admin", secret_key: str = "admin"
-    ) -> None:
-        """Create s3 user.
-
-        Args:
-            id: id of the user
-            access_key: Key for credentials
-            secret_key: Secret for credentials
-        """
+    def create_s3_user(self) -> None:
+        """Create s3 user."""
         ...
 
     def remove_gateway(self) -> None:

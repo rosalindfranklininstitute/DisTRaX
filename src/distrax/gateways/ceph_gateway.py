@@ -1,3 +1,5 @@
+import configparser
+import json
 import subprocess
 import time
 
@@ -102,34 +104,52 @@ class CephGateway:
         )
         return "ceph.client.radosgw.keyring"
 
-    @staticmethod
-    def create_s3_user(
-        id: str = "admin", access_key: str = "admin", secret_key: str = "admin"
-    ) -> None:
-        """Create s3 user.
-
-        Args:
-            id: id of the user
-            access_key: Key for credentials
-            secret_key: Secret for credentials
+    def create_s3_user(self) -> None:
+        """Create s3 user, along with a credentials_file.
 
         Examples:
-            >>> gateway.create_s3_user(id="admin", access_key="1234", secret_key="abcd")
+            >>> gateway.create_s3_user()
+
+        Returns:
+            credentials_file in the form:
+
+            [default]
+            user = distrax
+            access_key = xxxx
+            secret_key = xxxx
+            endpoint = http://xxxx:7480:/
+
         """
-        subprocess.run(
-            ["radosgw-admin", "user", "create", f"--uid={id}", f"--display-name={id}"]
-        )
-        subprocess.run(
+        name: str = "distrax"
+        user_creation = subprocess.run(
             [
                 "radosgw-admin",
-                "key",
+                "user",
                 "create",
-                f"--uid={id}",
-                "--key-type=s3",
-                f"--secret={secret_key}",
-                f"--access-key={access_key}",
-            ]
+                f"--uid={name}",
+                f"--display-name={name}",
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
+
+        user_creation_dict = json.loads(user_creation.stdout.decode())
+
+        with open(f"{self.folder}/credentials", "w") as credentials_file:
+            credentials = configparser.ConfigParser()
+            config = configparser.ConfigParser()
+            config.read(f"{self.folder}/{ceph.CONFIG_FILE}")
+            credentials.add_section("default")
+            user = user_creation_dict["keys"][0]["user"]
+            credentials.set("default", "user", user)
+            access_key = user_creation_dict["keys"][0]["access_key"]
+            credentials.set("default", "access_key", access_key)
+            secret_key = user_creation_dict["keys"][0]["secret_key"]
+            credentials.set("default", "secret_key", secret_key)
+            credentials.set(
+                "default", "endpoint", f"http://{config['global']['mon host']}:7480/"
+            )
+            credentials.write(credentials_file)
 
     def remove_gateway(self) -> None:
         """Remove the Ceph RadosGateway Daemon.
