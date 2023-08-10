@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import time
 from math import floor, log
@@ -5,6 +6,8 @@ from typing import Union
 
 import distrax.utils.ceph as ceph
 from distrax.pools import POOL
+
+logger = logging.getLogger(__name__)
 
 
 class CephPool:
@@ -18,7 +21,7 @@ class CephPool:
     """
 
     @staticmethod
-    def create_pool(name: str, percentage: float) -> None:
+    def create_pool(name: str = "distrax", percentage: float = 1.0) -> None:
         """Create the Pool to store objects.
 
         Args:
@@ -30,6 +33,7 @@ class CephPool:
                 pool 'distrax' created
 
         """
+        logger.info(f"Creating Pool {name}")
         current_cluster_pgs = ceph.get_current_pg()
         TARGET_PGS = 100
         # Calculate pgs based off https://old.ceph.com/pgcalc/
