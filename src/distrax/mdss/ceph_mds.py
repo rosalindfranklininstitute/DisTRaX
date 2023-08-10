@@ -136,7 +136,6 @@ class CephMDS:
             ]
         )
         # Stop the mds
-        system.stop_service(f"ceph-mds@{self.hostname}")
         system.stop_service("ceph-mds.target")
         system.disable_service("ceph-mds.target")
         system.stop_service("system-ceph\\x2dmds.slice")
