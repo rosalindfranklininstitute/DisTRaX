@@ -171,6 +171,7 @@ def lspools(timeout: str = "5") -> List[Dict[str, str]]:
     pools = subprocess.run(
         ["ceph", "osd", "lspools", "--format", "json", "--connect-timeout", timeout],
         stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     if pools.returncode != 0:
         return []
@@ -231,6 +232,7 @@ def pool_status(
     status = subprocess.run(
         ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
         stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     state = dict(json.loads(status.stdout))
     pgmap: PoolStatus = PoolStatus(
@@ -286,6 +288,7 @@ def rgw_status(
     status = subprocess.run(
         ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
         stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     state = dict(json.loads(status.stdout))
     servicemap = state["servicemap"]
@@ -314,6 +317,7 @@ def mds_status(
     status = subprocess.run(
         ["ceph", "--status", "--format", "json", "--connect-timeout", timeout],
         stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     state = dict(json.loads(status.stdout))
     fsmap = state["fsmap"]
