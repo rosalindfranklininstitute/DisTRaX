@@ -1,5 +1,6 @@
 import os
 import subprocess
+from typing import List
 
 from distrax.devices import DEVICE
 from distrax.exceptions.exceptions import DeviceCreationError, NotEnoughMemoryError
@@ -59,6 +60,21 @@ class BRDDevice:
                 "Device creation failed, please investigate further before running "
                 "DisTRaX again"
             )
+
+    @staticmethod
+    def get_paths(number: int) -> List[str]:
+        """Get the paths of the devices created.
+
+        Args:
+            number: number of devices created
+
+        Returns:
+            List of Device Paths, i.e. /dev/ram0,/dev/ram1
+        """
+        devices = []
+        for i in range(number):
+            devices.append(f"/dev/ram{i}")
+        return devices
 
     @staticmethod
     def remove_device() -> None:

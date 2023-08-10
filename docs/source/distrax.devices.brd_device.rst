@@ -9,7 +9,7 @@ Device
 
 .. currentmodule:: distrax.devices.brd_device
 .. autoclass:: BRDDevice
-    :members: create_device, remove_device
+    :members: create_device, get_paths, remove_device
 
 .. autosummary::
   :toctree: _autosummary
