@@ -48,7 +48,7 @@ class CephFilesystem:
             ["ceph", "auth", "print-key", "client.admin"], stdout=subprocess.PIPE
         ).stdout.decode()
         # Create Filesystem directory
-        fileio.create_dir(self.mount_point, 0o755)
+        fileio.create_dir(self.mount_point, 755, admin=True)
 
         # Mount filesystem
         mounted = False
@@ -76,7 +76,7 @@ class CephFilesystem:
                 )
 
         # Change the ownership of the folder to ceph
-        fileio.recursive_change_ownership(self.mount_point, user, user)
+        fileio.recursive_change_ownership(self.mount_point, user, user, admin=True)
 
     def unmount_filesystem(self) -> None:
         """Unmount the Ceph filesystem.
