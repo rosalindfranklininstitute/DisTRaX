@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+import logging
+import os
+import sys
+import time
+from typing import Any, Dict
+
+import distrax.config.parser as parser
+import distrax.devices as devices
+import distrax.exceptions.exceptions as exceptions
+import distrax.filesystems as filesystems
+import distrax.gateways as gateways
+import distrax.mdss as mdss
+import distrax.mgrs as mgrs
+import distrax.mons as mons
+import distrax.osds as osds
+import distrax.pools as pools
+
+logging.basicConfig(stream=sys.stdout)
+
+
+def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools) -> int:
+    timeout = 60
+    logging.info("Creating Monitor")
+    try:
+        mon.create_mon(config["interface"])
+    except exceptions.ClusterExistsError as e:
+        logging.exception(e)
+        return -1
+    except Exception as e:
+        logging.exception(e)
+        logging.error("Removing cluster due to error")
+        mon.remove_mon()
+        return -1
+    logging.info("Creating Manager")
+    try:
+        mgr.create_mgr()
+    except Exception as e:
+        logging.exception(e)
+        logging.error("Removing cluster due to error")
+        mgr.remove_mgr()
+        mon.remove_mon()
+        return -1
+    logging.info("Creating Devices for OSDs")
+    try:
+        devices.set_device(config["ram_type"])
+        device = devices.get_device(config["ram_type"]).DEVICE()
+        device.create_device(size=config["ram_size"], number=config["ram_number"])
+    except Exception as e:
+        logging.exception(e)
+        logging.error("Removing cluster due to error")
+        mgr.remove_mgr()
+        mon.remove_mon()
+        return -1
+
+    paths = device.get_paths(number=config["ram_number"])
+    logging.info("Creating OSDs")
+    try:
+        osd.create_osds(paths)
+    except Exception as e:
+        logging.exception(e)
+        logging.error("Removing cluster due to error")
+        osd.nuke_osds()
+        device.remove_device()
+        mgr.remove_mgr()
+        mon.remove_mon()
+        return -1
+
+    osd_count = config["ram_number"] * config["number_of_hosts"]
+    start = time.time()
+    while not osd.is_osd_ready(num_up_and_in=osd_count):
+        time.sleep(0.5)
+        if time.time() - start > timeout:
+            logging.error("Waiting for OSDs to be ready timeout error")
+            logging.info("Reversing creation due to error")
+            osd.nuke_osds()
+            device.remove_device()
+            mgr.remove_mgr()
+            mon.remove_mon()
+            return -1
+    logging.info(f"Creating service: {config['service'].capitalize()}")
+    if config["service"] == "pool":
+        try:
+            pool.create_pool()
+        except Exception as e:
+            logging.exception(e)
+            logging.error("Waiting for OSDs to be ready timeout error")
+            logging.info("Reversing creation due to error")
+            osd.nuke_osds()
+            device.remove_device()
+            mgr.remove_mgr()
+            mon.remove_mon()
+
+    elif config["service"] == "gateway":
+        try:
+            gateways.set_gateway(config["backend"])
+            gateway = gateways.get_gateway(config["backend"]).GATEWAY(config["folder"])
+            gateway.create_gateway()
+            gateway.create_s3_user()
+        except Exception as e:
+            logging.exception(e)
+            logging.error("Waiting for OSDs to be ready timeout error")
+            logging.info("Reversing creation due to error")
+            gateway.remove_gateway()
+            pool.remove_pools()
+            osd.nuke_osds()
+            device.remove_device()
+            mgr.remove_mgr()
+            mon.remove_mon()
+    elif config["service"] == "filesystem":
+        mdss.set_mds(config["backend"])
+        mds = mdss.get_mds(config["backend"]).MDS(config["folder"])
+        filesystems.set_filesystem(config["backend"])
+        filesystem = filesystems.get_filesystem(config["backend"]).FILESYSTEM(
+            config["folder"]
+        )
+        mds.create_mds()
+        logging.info("Mounting filesystem to: /mnt/distrax")
+        try:
+            filesystem.mount_filesystem()
+        except Exception as e:
+            logging.exception(e)
+            logging.info("Reversing creation due to error")
+            mds.remove_mds()
+            pool.remove_pools()
+            osd.nuke_osds()
+            device.remove_device()
+            mgr.remove_mgr()
+            mon.remove_mon()
+    return 0
+
+
+def remove(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools) -> int:
+    try:
+        if not os.path.exists(config["folder"]):
+            logging.error("Cannot remove system as folder does not exist")
+            return 0
+        logging.info(f"Removing {config['backend'].capitalize()}")
+        if config["service"] == "gateway":
+            gateways.set_gateway(config["backend"])
+            gateway = gateways.get_gateway(config["backend"]).GATEWAY(config["folder"])
+            gateway.remove_gateway()
+        elif config["service"] == "filesystem":
+            filesystem = filesystems.get_filesystem(config["backend"]).FILESYSTEM(
+                config["folder"]
+            )
+            filesystem.unmount_filesystem()
+        mds = mdss.get_mds(config["backend"]).MDS(config["folder"])
+        mds.remove_mds()
+        logging.info("Removing pools")
+        pool.remove_pools()
+        logging.info("Removing OSDs")
+        osd.remove_osds()
+        logging.info("Removing Devices")
+        for device in devices.AVAILABLE:
+            device = devices.get_device(device).DEVICE()
+            device.remove_device()
+        logging.info("Removing Manager")
+        mgr.remove_mgr()
+        logging.info("Removing Monitor")
+        mon.remove_mon()
+        logging.info("Storage Cluster Removed")
+    except PermissionError as e:
+        logging.exception(e)
+        logging.error("Please get required permissions to use DisTRaX ")
+    return 0
+
+
+def main() -> None:
+    argvs = parser._argument_parser()
+    _action = argvs.action
+    _log_level = argvs.log_level
+    _log_level = parser.set_logging(_log_level)
+    logging.getLogger().setLevel(logging.DEBUG)
+    _config_file = argvs.config_file
+    config = parser._config_parser(_config_file)
+    if config == {}:
+        logging.error("Incorrect config file please consult documentation")
+
+    if config.get("log_level"):
+        logging.getLogger().setLevel(parser.set_logging(config["log_level"]))
+
+    mons.set_mon(config["backend"])
+    mon = mons.get_mon(config["backend"]).MON(folder=config["folder"])
+    mgrs.set_mgr(config["backend"])
+    mgr = mgrs.get_mgr(config["backend"]).MGR(folder=config["folder"])
+    osds.set_osd(config["backend"])
+    osd = osds.get_osd(config["backend"]).OSD(folder=config["folder"])
+    pools.set_pool(config["backend"])
+    pool = pools.get_pool(config["backend"]).POOL()
+
+    if _action == "create":
+        if create(config, mon, mgr, osd, pool) != 0:
+            logging.error("System not created please read logs")
+    elif _action == "remove":
+        remove(config, mon, mgr, osd, pool)
+
+
+if __name__ == "__main__":
+    main()
