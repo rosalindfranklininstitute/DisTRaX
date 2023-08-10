@@ -5,6 +5,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.exceptions.exceptions import DaemonNotStartedError, MDSNotStartedError
 from distrax.mdss import MDS
 from distrax.pools.ceph_pool import CephPool
 
@@ -24,7 +25,7 @@ class CephMDS:
         >>> mgr = CephMDS(folder="distrax")
     """
 
-    def __init__(self, folder: str = "ceph"):
+    def __init__(self, folder: str = "ceph", timeout: int = 5):
         """Initialise the CephMDS object.
 
         Args:
@@ -37,6 +38,7 @@ class CephMDS:
         """
         self.hostname = network.hostname()
         self.folder = folder
+        self.timeout = timeout
 
     def create_mds(self) -> None:
         """Create the Ceph MDS Daemon.
@@ -61,6 +63,10 @@ class CephMDS:
         )
         # Start the Daemon
         system.start_service(f"ceph-mds@{self.hostname}")
+        status = system.is_systemd_service_active(f"ceph-mds@{self.hostname}")
+        if status is False:
+            message = "Ceph MDS Daemon Failed to Start, please investigate"
+            raise DaemonNotStartedError(message)
         # Pools required for the MDS
         pool = CephPool()
         pool.create_pool(name="cephfs_data", percentage=0.90)
@@ -71,9 +77,12 @@ class CephMDS:
         )
         # Ensure that the filesystem has joined the cluster.
         mds_started = False
+        start = time.time()
         while mds_started is False:
             time.sleep(0.1)
             mds_started = ceph.mds_status()
+            if time.time() - start > self.timeout:
+                raise MDSNotStartedError("Ceph MDS failed to start")
 
     def _add_mds(self) -> str:
         """Adds the MDS keys to the ceph system.
