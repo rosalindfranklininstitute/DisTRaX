@@ -18,6 +18,23 @@ class AbstractOSD(Protocol):
         """
         ...
 
+    @staticmethod
+    def is_osd_ready(num_up_and_in: int) -> bool:
+        """Check if the OSDs are ready.
+
+        Args:
+            num_up_and_in: The number of OSDS expected to be up and running
+
+        Returns:
+            True when the number of up and in match stated requirment.
+
+        Examples:
+            >>> osd.osd_ready()
+                True
+
+        """
+        ...
+
     def remove_osds(self) -> None:
         """Remove the OSDs created."""
         ...
