@@ -17,21 +17,18 @@ class CephFilesystem:
     Examples:
         >>> filesystem = CephFilesystem()
 
-        >>> filesystem = CephFilesystem(folder="ceph", mount_point="cephfs")
+        >>> filesystem = CephFilesystem(folder="ceph")
     """
 
-    def __init__(self, mount_point: str = "cephfs"):
+    def __init__(self, folder: str = "ceph", timeout: int = 5):
         """Initialise the CephFilesystem object.
-
-        Args:
-            mount_point: The name of the directory in /mnt
 
         Examples:
         >>> filesystem = CephFilesystem()
-
-        >>> filesystem = CephFilesystem(mount_point="cephfs")
         """
-        self.mount_point = "/mnt/" + mount_point
+        self.mount_point: str = "/mnt/distrax"
+        self.folder = folder
+        self.timeout = timeout
 
     def mount_filesystem(self) -> None:
         """Mount the Ceph Filesystem.
