@@ -31,7 +31,7 @@ def set_mds(mds: str) -> None:
     if mds in AVAILABLE:
         module_ = import_module(f"distrax.mdss.{mds}_mds")
         if hasattr(module_, "_mds"):
-            log.debug("Switching manger to `%s`", module_._mds.name)
+            log.debug("Switching meta data server to `%s`", module_._mds.name)
             _current = module_._mds
         else:
             raise Exception(f"Module `{mds}` is not configured correctly.")
