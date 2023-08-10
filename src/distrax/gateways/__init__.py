@@ -31,7 +31,7 @@ def set_gateway(gateway: str) -> None:
     if gateway in AVAILABLE:
         module_ = import_module(f"distrax.gateways.{gateway}_gateway")
         if hasattr(module_, "_gateway"):
-            log.debug("Switching manger to `%s`", module_._gateway.name)
+            log.debug("Switching gateway to `%s`", module_._gateway.name)
             _current = module_._gateway
         else:
             raise Exception(f"Module `{gateway}` is not configured correctly.")

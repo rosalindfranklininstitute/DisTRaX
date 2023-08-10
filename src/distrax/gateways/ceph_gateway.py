@@ -51,14 +51,16 @@ class CephGateway:
         # Create key
         rgw_keyring = self._add_gateway()
         # Create MGR directory
-        fileio.create_dir(f"{ceph.VAR_RGW}{self.hostname}", 0o755)
+        fileio.create_dir(f"{ceph.VAR_RGW}{self.hostname}", 755, admin=True)
         # Copy the key to the folder
         fileio.copy_file(
-            f"{self.folder}/{rgw_keyring}", f"{ceph.VAR_RGW}{self.hostname}/keyring"
+            f"{self.folder}/{rgw_keyring}",
+            f"{ceph.VAR_RGW}{self.hostname}/keyring",
+            admin=True,
         )
         # Change the ownership of the folder to ceph
         fileio.recursive_change_ownership(
-            f"{ceph.VAR_RGW}{self.hostname}", "ceph", "ceph"
+            f"{ceph.VAR_RGW}{self.hostname}", "ceph", "ceph", admin=True
         )
         # Pools required for the RadosGateway
         pool = CephPool()
@@ -159,8 +161,8 @@ class CephGateway:
         """
         system.stop_service("ceph-radosgw.target")
         system.disable_service("ceph-radosgw.target")
-        system.stop_service("system-ceph\\x2radosgw.slice")
-        fileio.remove_dir(f"{ceph.VAR_RGW}{self.hostname}")
+        system.stop_service("system-ceph\\x2dradosgw.slice")
+        fileio.remove_dir(f"{ceph.VAR_RGW}{self.hostname}", admin=True)
 
 
 _gateway = GATEWAY("ceph", CephGateway)

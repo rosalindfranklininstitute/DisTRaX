@@ -31,7 +31,7 @@ def set_pool(pool: str) -> None:
     if pool in AVAILABLE:
         module_ = import_module(f"distrax.pools.{pool}_pool")
         if hasattr(module_, "_pool"):
-            log.debug("Switching manger to `%s`", module_._pool.name)
+            log.debug("Switching pool to `%s`", module_._pool.name)
             _current = module_._pool
         else:
             raise Exception(f"Module `{pool}` is not configured correctly.")
