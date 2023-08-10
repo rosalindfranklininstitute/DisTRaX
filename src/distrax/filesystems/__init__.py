@@ -33,7 +33,7 @@ def set_filesystem(filesystem: str) -> None:
     if filesystem in AVAILABLE:
         module_ = import_module(f"distrax.filesystems.{filesystem}_filesystem")
         if hasattr(module_, "_filesystem"):
-            log.debug("Switching manger to `%s`", module_._filesystem.name)
+            log.debug("Switching filesystem to `%s`", module_._filesystem.name)
             _current = module_._filesystem
         else:
             raise Exception(f"Module `{filesystem}` is not configured correctly.")

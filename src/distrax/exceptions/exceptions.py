@@ -56,3 +56,15 @@ class MDSNotStartedError(Exception):
             message: Message to display
         """
         super().__init__(message)
+
+        
+class MountingFilesystemError(Exception):
+    """When a Daemon Fails to Start."""
+
+    def __init__(self, message: str):
+        """Call the base class constructor with the parameters it needs.
+
+        Args:
+            message: Message to display
+        """
+        super().__init__(message)
