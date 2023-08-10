@@ -31,7 +31,7 @@ def set_osd(osd: str) -> None:
     if osd in AVAILABLE:
         module_ = import_module(f"distrax.osds.{osd}_osd")
         if hasattr(module_, "_osd"):
-            log.debug("Switching manger to `%s`", module_._osd.name)
+            log.debug("Switching object storage device to `%s`", module_._osd.name)
             _current = module_._osd
         else:
             raise Exception(f"Module `{osd}` is not configured correctly.")
