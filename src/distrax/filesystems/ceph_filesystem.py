@@ -36,7 +36,7 @@ class CephFilesystem:
     def mount_filesystem(self) -> None:
         """Mount the Ceph Filesystem.
 
-        This mounts the filesystem for the user in the /mnt location
+        This mounts the filesystem for the user in the /mnt/distrax/ location
 
         Examples:
             >>> filesystem.mount_filesystem()
