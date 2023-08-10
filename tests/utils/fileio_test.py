@@ -87,7 +87,7 @@ class TestFileIO:
         mode = 777
         test = fileio.create_dir(TEST_FOLDER, mode)
         assert test is True
-        assert stat.S_IMODE(os.lstat(TEST_FOLDER).st_mode) == mode
+        assert int(oct(stat.S_IMODE(os.lstat(TEST_FOLDER).st_mode))[-3:]) == mode
         # Create folder that already exists
         test = fileio.create_dir(TEST_FOLDER, mode)
         assert test is False
@@ -123,11 +123,13 @@ class TestFileIO:
             current_grp = Path(TEST_FILE).group()
             assert current_user != TEST_USER
             assert current_grp != TEST_GRP
-            test = fileio.change_ownership(TEST_FILE, TEST_USER, TEST_GRP)
+            test = fileio.change_ownership(TEST_FILE, TEST_USER, TEST_GRP, admin=True)
             assert test is True
             assert Path(TEST_FILE).owner() == TEST_USER
             assert Path(TEST_FILE).group() == TEST_GRP
-            test = fileio.change_ownership(NON_EXISTENT_FILE, TEST_USER, TEST_GRP)
+            test = fileio.change_ownership(
+                NON_EXISTENT_FILE, TEST_USER, TEST_GRP, admin=True
+            )
             assert test is False
         except KeyError:
             pytest.fail(
@@ -152,14 +154,16 @@ class TestFileIO:
             current_sub_grp = Path(TEST_SUB_FOLDER).group()
             assert current_sub_user != TEST_USER
             assert current_sub_grp != TEST_GRP
-            test = fileio.recursive_change_ownership(TEST_FOLDER, TEST_USER, TEST_GRP)
+            test = fileio.recursive_change_ownership(
+                TEST_FOLDER, TEST_USER, TEST_GRP, admin=True
+            )
             assert test is True
             assert Path(TEST_FOLDER).owner() == TEST_USER
             assert Path(TEST_FOLDER).group() == TEST_GRP
             assert Path(TEST_SUB_FOLDER).owner() == TEST_USER
             assert Path(TEST_SUB_FOLDER).group() == TEST_GRP
             test = fileio.recursive_change_ownership(
-                NON_EXISTENT_FILE, TEST_USER, TEST_GRP
+                NON_EXISTENT_FILE, TEST_USER, TEST_GRP, admin=True
             )
             assert test is False
         except KeyError:
