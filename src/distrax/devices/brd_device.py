@@ -1,5 +1,6 @@
 import os
 import subprocess
+from typing import List
 
 from distrax.devices import DEVICE
 from distrax.exceptions.exceptions import DeviceCreationError, NotEnoughMemoryError
@@ -52,13 +53,35 @@ class BRDDevice:
                 "created, please remove previous RAM block device before continuing"
             )
         return_code = subprocess.run(
-            ["modprobe", "brd", f"rd_size={size}", "max_part=1", f"rd_nr={number}"]
+            [
+                "sudo",
+                "modprobe",
+                "brd",
+                f"rd_size={size}",
+                "max_part=1",
+                f"rd_nr={number}",
+            ]
         ).returncode
         if return_code != 0:
             raise DeviceCreationError(
                 "Device creation failed, please investigate further before running "
                 "DisTRaX again"
             )
+
+    @staticmethod
+    def get_paths(number: int) -> List[str]:
+        """Get the paths of the devices created.
+
+        Args:
+            number: number of devices created
+
+        Returns:
+            List of Device Paths, i.e. /dev/ram0,/dev/ram1
+        """
+        devices = []
+        for i in range(number):
+            devices.append(f"/dev/ram{i}")
+        return devices
 
     @staticmethod
     def remove_device() -> None:
@@ -69,9 +92,14 @@ class BRDDevice:
             # Removes the BRD block device from the system.
 
         """
-        subprocess.run(
-            ["rmmod", "brd"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
+        if os.path.exists("/dev/ram0"):
+            subprocess.run(
+                [
+                    "sudo",
+                    "rmmod",
+                    "brd",
+                ]
+            )
 
 
 _device = DEVICE("brd", BRDDevice)

@@ -9,7 +9,7 @@ for all created Device classes.
 
 .. currentmodule:: distrax.devices.abstract_device
 .. autoclass:: AbstractDevice
-    :members: create_device, remove_device
+    :members: create_device, get_paths, remove_device
 
 .. autosummary::
   :toctree: _autosummary
