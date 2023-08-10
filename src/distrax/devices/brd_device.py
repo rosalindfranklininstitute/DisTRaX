@@ -2,9 +2,9 @@ import os
 import subprocess
 from typing import List
 
-from distrax.devices import DEVICE
-from distrax.exceptions.exceptions import DeviceCreationError, NotEnoughMemoryError
-from distrax.utils.system import free_memory
+from . import DEVICE
+from ..exceptions.exceptions import DeviceCreationError, NotEnoughMemoryError
+from ..utils.system import free_memory
 
 
 class BRDDevice:

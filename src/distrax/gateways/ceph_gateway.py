@@ -3,12 +3,12 @@ import json
 import subprocess
 import time
 
-import distrax.utils.ceph as ceph
-import distrax.utils.fileio as fileio
-import distrax.utils.network as network
-import distrax.utils.system as system
-from distrax.gateways import GATEWAY
-from distrax.pools.ceph_pool import CephPool
+from ..utils import ceph as ceph
+from ..utils import fileio as fileio
+from ..utils import network as network
+from ..utils import system as system
+from . import GATEWAY
+from ..pools.ceph_pool import CephPool
 
 
 class CephGateway:
