@@ -1,4 +1,5 @@
 import glob
+import json
 import logging
 import subprocess
 import time
@@ -75,6 +76,34 @@ class CephOSD:
             )
             logger.info(f"Created {device} OSD")
 
+    @staticmethod
+    def is_osd_ready(num_up_and_in: int) -> bool:
+        """Check if the OSDs are ready.
+
+        Args:
+            num_up_and_in: The number of OSDS expected to be up and running
+
+        Returns:
+            True when the number of up and in match stated requirment.
+
+        Examples:
+            >>> osd.osd_ready()
+                True
+
+        """
+        status_process = subprocess.run(
+            ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE
+        )
+        status = dict(json.loads(status_process.stdout))
+        """{'epoch': 1, 'num_osds': 5, 'num_up_osds': 5, 'osd_up_since': 1,
+            'num_in_osds': 5, 'osd_in_since': 1, 'num_remapped_pgs': 0}"""
+        if (
+            status["num_up_osds"] == num_up_and_in
+            and status["num_in_osds"] == num_up_and_in
+        ):
+            return True
+        return False
+
     def remove_osds(self) -> None:
         """Remove the OSDs devices from the system.
 
@@ -109,7 +138,7 @@ class CephOSD:
             pvs = pv.split(",")  # PV, VG
             if pvs[1][:4] == "ceph":
                 subprocess.run(
-                    ["sudo", "ceph-volume", "lvm", "zap", "--destroy", pv[0]],
+                    ["sudo", "ceph-volume", "lvm", "zap", "--destroy", pvs[0]],
                 )
         # Get ceph-volume services
         osd_services = glob.glob(

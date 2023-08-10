@@ -9,7 +9,7 @@ for all created OSD classes.
 
 .. currentmodule:: distrax.osds.abstract_osd
 .. autoclass:: AbstractOSD
-    :members: create_osds, remove_osds
+    :members: create_osds, is_osd_ready, remove_osds
 
 .. autosummary::
   :toctree: _autosummary
