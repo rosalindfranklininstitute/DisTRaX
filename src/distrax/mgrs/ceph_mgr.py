@@ -4,6 +4,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.exceptions.exceptions import DaemonNotStartedError
 from distrax.mgrs import MGR
 
 
@@ -47,17 +48,23 @@ class CephMGR:
         # Create key
         mgr_keyring = self._add_mgr()
         # Create MGR directory
-        fileio.create_dir(f"{ceph.VAR_MGR}{self.hostname}", 0o755)
+        fileio.create_dir(f"{ceph.VAR_MGR}{self.hostname}", 755, admin=True)
         # Copy the key to the folder
         fileio.copy_file(
-            f"{self.folder}/{mgr_keyring}", f"{ceph.VAR_MGR}{self.hostname}/keyring"
+            f"{self.folder}/{mgr_keyring}",
+            f"{ceph.VAR_MGR}{self.hostname}/keyring",
+            admin=True,
         )
         # Change the ownership of the folder to ceph
         fileio.recursive_change_ownership(
-            f"{ceph.VAR_MGR}{self.hostname}", "ceph", "ceph"
+            f"{ceph.VAR_MGR}{self.hostname}", "ceph", "ceph", admin=True
         )
         # Start the Daemon
         system.start_service(f"ceph-mgr@{self.hostname}")
+        status = system.is_systemd_service_active(f"ceph-mgr@{self.hostname}")
+        if status is False:
+            message = "Ceph Manager Failed to Start, please investigate"
+            raise DaemonNotStartedError(message)
 
     def _add_mgr(self) -> str:
         """Adds the manager keys to the ceph system.
@@ -97,7 +104,8 @@ class CephMGR:
         system.stop_service("ceph-mgr.target")
         system.disable_service("ceph-mgr.target")
         system.stop_service("system-ceph\\x2dmgr.slice")
-        fileio.remove_dir(f"{ceph.VAR_MGR}{self.hostname}")
+        fileio.remove_dir(f"{ceph.VAR_MGR}{self.hostname}", admin=True)
+        fileio.remove_file(f"{ceph.VAR_RUN}mgr.{self.hostname}.asok", admin=True)
 
 
 _mgr = MGR(name="ceph", MGR=CephMGR)
