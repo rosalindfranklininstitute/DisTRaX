@@ -1,5 +1,4 @@
 import configparser
-import os
 import subprocess
 import uuid
 
@@ -7,6 +6,7 @@ import distrax.utils.ceph as ceph
 import distrax.utils.fileio as fileio
 import distrax.utils.network as network
 import distrax.utils.system as system
+from distrax.exceptions.exceptions import ClusterExistsError, DaemonNotStartedError
 from distrax.mons import MON
 
 
@@ -49,6 +49,15 @@ class CephMON:
         Examples:
             >>> mon.create_mon("lo")
         """
+        ceph_state = subprocess.run(
+            ["ceph", "-s", "--connect-timeout", "3"],
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        )
+        if ceph_state.returncode != 1:
+            raise ClusterExistsError(
+                f"Ceph Cluster Exists: \r\n {ceph_state.stdout.decode('utf-8')}"
+            )
         # Get system details
         self.fsid = str(uuid.uuid4().hex)
         self.ip = network.ip_address_from_network_interface(interface)
@@ -70,7 +79,6 @@ class CephMON:
         )
         # Create Monmap
         self._create_monmap()
-        fileio.recursive_change_ownership(self.folder, os.getlogin(), os.getlogin())
         # Create Cluster
         self._create_cluster()
         # Copy files
