@@ -53,7 +53,14 @@ class BRDDevice:
                 "created, please remove previous RAM block device before continuing"
             )
         return_code = subprocess.run(
-            ["modprobe", "brd", f"rd_size={size}", "max_part=1", f"rd_nr={number}"]
+            [
+                "sudo",
+                "modprobe",
+                "brd",
+                f"rd_size={size}",
+                "max_part=1",
+                f"rd_nr={number}",
+            ]
         ).returncode
         if return_code != 0:
             raise DeviceCreationError(
