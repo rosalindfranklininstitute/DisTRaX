@@ -38,27 +38,31 @@ class CephOSD:
             >>> osd.create_osds(["/dev/ram0", "/dev/ram1"])
         """
         # Create needed directories for OSDs to run on the system
-        fileio.create_dir(ceph.VAR_BOOTSTRAP_OSD, 0o755)
-        fileio.recursive_change_ownership(ceph.VAR_BOOTSTRAP_OSD, "ceph", "ceph")
-        fileio.create_dir(ceph.VAR_OSD, 0o755)
-        fileio.recursive_change_ownership(ceph.VAR_OSD, "ceph", "ceph")
+        fileio.create_dir(ceph.VAR_BOOTSTRAP_OSD, 755, admin=True)
+        fileio.create_dir(ceph.VAR_OSD, 755, admin=True)
 
         # Copy OSDs files to ETC Ceph
         fileio.copy_file(
-            f"{self.folder}/{ceph.CONFIG_FILE}", f"{ceph.ETC_CEPH}/{ceph.CONFIG_FILE}"
+            f"{self.folder}/{ceph.CONFIG_FILE}",
+            f"{ceph.ETC_CEPH}/{ceph.CONFIG_FILE}",
+            admin=True,
         )
         fileio.copy_file(
             f"{self.folder}/{ceph.ADMIN_KEYRING}",
             f"{ceph.ETC_CEPH}/{ceph.ADMIN_KEYRING}",
+            admin=True,
         )
 
         fileio.copy_file(
-            f"{self.folder}/{ceph.OSD_KEYRING}", f"{ceph.ETC_CEPH}/ceph.keyring"
+            f"{self.folder}/{ceph.OSD_KEYRING}",
+            f"{ceph.ETC_CEPH}/ceph.keyring",
+            admin=True,
         )
         # Copy OSDs files to VAR Ceph
         fileio.copy_file(
             f"{self.folder}/{ceph.OSD_KEYRING}",
             f"{ceph.VAR_BOOTSTRAP_OSD}/ceph.keyring",
+            admin=True,
         )
         # Create the OSDs using ceph-volume
         for device in devices:
