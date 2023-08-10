@@ -1,8 +1,11 @@
+import configparser
+import json
 import os
 import subprocess
 import time
 
 import distrax.utils.fileio as fileio
+from distrax.exceptions.exceptions import MountingFilesystemError
 from distrax.filesystems import FILESYSTEM
 
 
@@ -49,6 +52,7 @@ class CephFilesystem:
 
         # Mount filesystem
         mounted = False
+        start = time.time()
         while mounted is False:
             subprocess.run(
                 [
@@ -63,6 +67,13 @@ class CephFilesystem:
             )
             mounted = os.path.ismount(self.mount_point)
             time.sleep(0.1)
+            if time.time() - start > self.timeout:
+                raise MountingFilesystemError(
+                    "Mounting Ceph Filesystem timed out and failed. "
+                    "Ensure all the correct packages are "
+                    "installed for operating the ceph filesystem, i,e, ceph-mds."
+                )
+
         # Change the ownership of the folder to ceph
         fileio.recursive_change_ownership(self.mount_point, user, user)
 
