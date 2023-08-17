@@ -3,7 +3,6 @@
 ``distrax.utils.system`` module
 ===============================
 
-
 .. currentmodule:: distrax.utils.system
 
 .. automodule:: distrax.utils.system

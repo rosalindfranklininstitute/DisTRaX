@@ -1,9 +1,7 @@
 
 ``distrax.utils`` module
 ========================
-
 .. currentmodule:: distrax.utils
-
 .. toctree::
     :maxdepth: 1
 
