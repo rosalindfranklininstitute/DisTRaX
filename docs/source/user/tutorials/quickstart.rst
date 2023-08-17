@@ -1,4 +1,4 @@
-DisTRaX's Quick Start Guide!
+Quick Start Guide!
 ===================================
 
 This guide will get you up and running with deploying and removing a storage cluster using DisTRaX. We will go over the commands that DisTRaX uses along with the configuration. We will show how to create the pool, a gateway and a filesystem clusters.
