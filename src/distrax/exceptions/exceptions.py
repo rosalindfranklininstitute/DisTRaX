@@ -47,7 +47,7 @@ class DaemonNotStartedError(Exception):
 
 
 class MDSNotStartedError(Exception):
-    """When a Daemon Fails to Start."""
+    """When the Metadata Server Fails to Start."""
 
     def __init__(self, message: str):
         """Call the base class constructor with the parameters it needs.
@@ -57,9 +57,9 @@ class MDSNotStartedError(Exception):
         """
         super().__init__(message)
 
-        
+
 class MountingFilesystemError(Exception):
-    """When a Daemon Fails to Start."""
+    """When Mounting the Filesystem Errors."""
 
     def __init__(self, message: str):
         """Call the base class constructor with the parameters it needs.

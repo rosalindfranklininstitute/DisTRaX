@@ -1,5 +1,5 @@
-Message to Sysadmins
-====================
+Why Sudo: A Message to Sysadmins
+================================
 
 Hello Sysadmin, a user has asked you to give them escalated privileges to use DisTRaX. Understandably your first reaction is no. Hopefully, this document will change your mind and help you understand why escalated privileges are required and kept at a minimum. If there are any questions are not answered, please raise an issue on  https://github.com/rosalindfranklininstitute/DisTRaX/issues
 
