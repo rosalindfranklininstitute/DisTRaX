@@ -1,0 +1,412 @@
+#!/usr/bin/env python3
+import logging
+import operator as op
+import os
+import sys
+import time
+from typing import Any, Dict, Union
+
+from mpi4py import MPI
+
+import distrax.config.parser as parser
+import distrax.devices as devices
+import distrax.exceptions.exceptions as exceptions
+import distrax.filesystems as filesystems
+import distrax.gateways as gateways
+import distrax.mdss as mdss
+import distrax.mgrs as mgrs
+import distrax.mons as mons
+import distrax.osds as osds
+import distrax.pools as pools
+
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
+
+logging.basicConfig(stream=sys.stdout)
+
+
+def check_host(comm: MPI.Intracomm, rank: int, size: int) -> int:
+    error = 0
+    req = comm.isend(MPI.Get_processor_name(), dest=0, tag=11)
+    req.wait()
+    if rank == 0:
+        received_hosts = []
+        for i in range(size):
+            req = comm.irecv(source=i, tag=11)
+            received_hosts.append(req.wait())
+    comm.Barrier()
+    if rank == 0:
+        different = True
+        # Check all hosts are different
+        for host_name in received_hosts:
+            if op.countOf(received_hosts, host_name) > 1:
+                different = False
+                break
+        # printing result
+        if not different:
+            logging.error(
+                "Not all hosts are different, please ensure each rank is on "
+                "a separate host: ",
+                received_hosts,
+            )
+            error = -1
+    error = comm.bcast(error, root=0)
+    comm.Barrier()
+    return error
+
+
+def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools) -> int:
+    timeout = 60
+    mpi_error = False
+    if rank == 0:
+        logging.info("Creating Monitor")
+        try:
+            mon.create_mon(config["interface"])
+        except exceptions.ClusterExistsError as e:
+            logging.exception(e)
+            mpi_error = True
+        except Exception as e:
+            logging.exception(e)
+            logging.error("Removing cluster due to error")
+            remove_root(mon)
+            mpi_error = True
+    comm.Barrier()
+    mpi_error = comm.bcast(mpi_error, root=0)
+    if mpi_error is True:
+        return -1
+    if rank == 0:
+        logging.info("Creating Manager")
+        try:
+            mgr.create_mgr()
+        except Exception as e:
+            logging.exception(e)
+            logging.error("Removing cluster due to error")
+            remove_root(mon, mgr)
+            mpi_error = True
+    comm.Barrier()
+    mpi_error = comm.bcast(mpi_error, root=0)
+    if mpi_error is True:
+        return -1
+    comm.Barrier()
+    logging.info(f"Creating Devices for OSDs on Rank: {rank}")
+    try:
+        devices.set_device(config["ram_type"])
+        device = devices.get_device(config["ram_type"]).DEVICE()
+        device.create_device(size=config["ram_size"], number=config["ram_number"])
+        mpi_error_req = comm.isend(mpi_error, dest=0, tag=11)
+        mpi_error_req.wait()
+    except Exception as e:
+        logging.error(f"RANK {rank}: {e}")
+        mpi_error = True
+        mpi_error_req = comm.isend(mpi_error, dest=0, tag=11)
+        mpi_error_req.wait()
+
+    comm.Barrier()
+    if rank == 0:
+        mpi_errors = []
+        for i in range(size):
+            mpi_error_req = comm.irecv(source=i, tag=11)
+            mpi_errors.append(mpi_error_req.wait())
+        if True in mpi_errors:
+            logging.error("Removing cluster due to error")
+            mpi_error = True
+    mpi_error = comm.bcast(mpi_error, root=0)
+    if mpi_error is True:
+        remove_from_all_hosts(device)
+    if rank == 0 and mpi_error is True:
+        remove_root(mon, mgr)
+    comm.Barrier()
+    if mpi_error:
+        return -1
+    comm.Barrier()
+
+    paths = device.get_paths(number=config["ram_number"])
+    logging.info(f"Creating OSDs on Rank: {rank}")
+    try:
+        osd.create_osds(paths)
+    except Exception as e:
+        logging.error(f"RANK {rank}: {e}")
+        mpi_error = True
+        mpi_error_req = comm.isend(mpi_error, dest=0, tag=11)
+        mpi_error_req.wait()
+
+    comm.Barrier()
+    if rank == 0:
+        mpi_errors = []
+        for i in range(size):
+            mpi_error_req = comm.irecv(source=i, tag=11)
+            mpi_errors.append(mpi_error_req.wait())
+        if True in mpi_errors:
+            mpi_error = True
+    mpi_error = comm.bcast(mpi_error, root=0)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(osd, device)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(mon, mgr)
+    comm.Barrier()
+    if mpi_error is True:
+        return -1
+    comm.Barrier()
+    if rank == 0:
+        logging.info("Ensure OSDs are up and running")
+        osd_count = config["ram_number"] * config["number_of_hosts"]
+        start = time.time()
+        while not osd.is_osd_ready(num_up_and_in=osd_count):
+            time.sleep(0.5)
+            if time.time() - start > timeout:
+                logging.error("Waiting for OSDs to be ready timeout error")
+                logging.info("Reversing creation due to error")
+                mpi_error = True
+                break
+    mpi_error = comm.bcast(mpi_error, root=0)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(osd, device)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(mon, mgr)
+    comm.Barrier()
+    if mpi_error is True:
+        return -1
+    if rank == 0:
+        logging.info(f"Creating service: {config['service'].capitalize()}")
+        if config["service"] == "pool":
+            try:
+                pool.create_pool()
+            except Exception as e:
+                logging.exception(e)
+                pool.remove_pools()
+                logging.info("Reversing creation due to error")
+                mpi_error = True
+    mpi_error = comm.bcast(mpi_error, root=0)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(osd, device)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(
+            mon,
+            mgr,
+        )
+    comm.Barrier()
+    if mpi_error is True:
+        return -1
+    if rank == 0:
+        if config["service"] == "gateway":
+            try:
+                gateways.set_gateway(config["backend"])
+                gateway = gateways.get_gateway(config["backend"]).GATEWAY(
+                    config["folder"]
+                )
+                gateway.create_gateway()
+                gateway.create_s3_user()
+            except Exception as e:
+                logging.exception(e)
+                logging.error("Waiting for OSDs to be ready timeout error")
+                logging.info("Reversing creation due to error")
+                gateway.remove_gateway()
+                pool.remove_pools()
+                mpi_error = True
+    mpi_error = comm.bcast(mpi_error, root=0)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(osd, device)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(
+            mon,
+            mgr,
+        )
+    comm.Barrier()
+    if mpi_error is True:
+        return -1
+
+    if config["service"] == "filesystem":
+        mdss.set_mds(config["backend"])
+        mds = mdss.get_mds(config["backend"]).MDS(config["folder"])
+
+        if rank == 0:
+            try:
+                mds.create_mds()
+            except Exception as e:
+                logging.exception(e)
+                logging.info("Reversing creation due to error")
+                mds.remove_mds()
+                pool.remove_pools()
+                mpi_error = True
+    mpi_error = comm.bcast(mpi_error, root=0)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(osd, device)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(
+            mon,
+            mgr,
+        )
+    comm.Barrier()
+    if mpi_error is True:
+        return -1
+    if config["service"] == "filesystem":
+        filesystems.set_filesystem(config["backend"])
+        filesystem = filesystems.get_filesystem(config["backend"]).FILESYSTEM(
+            config["folder"]
+        )
+        try:
+            filesystem.mount_filesystem()
+        except Exception as e:
+            logging.exception(f"Rank {rank}: {e}")
+            mpi_error = True
+            mpi_error_req = comm.isend(mpi_error, dest=0, tag=11)
+            mpi_error_req.wait()
+
+    comm.Barrier()
+    if rank == 0:
+        mpi_errors = []
+        for i in range(size):
+            mpi_error_req = comm.irecv(source=i, tag=11)
+            mpi_errors.append(mpi_error_req.wait())
+        if True in mpi_errors:
+            mpi_error = True
+    mpi_error = comm.bcast(mpi_error, root=0)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(filesystem=filesystem)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(mds=mds, pool=pool)
+    comm.Barrier()
+    if mpi_error:
+        logging.error("Removing OSDs due to error")
+        remove_from_all_hosts(osd=osd, device=device)
+    comm.Barrier()
+    if rank == 0 and mpi_error:
+        logging.error("Removing cluster due to error")
+        remove_root(mon=mon, mgr=mgr)
+    if mpi_error is True:
+        return -1
+    comm.Barrier()
+    return 0
+
+
+def remove_from_all_hosts(
+    osd: Union[None, osds] = None,
+    device: Union[None, devices] = None,
+    filesystem: Union[None, filesystems] = None,
+) -> None:
+    if filesystem:
+        filesystem.unmount_filesystem()
+    if osd:
+        osd.remove_osds()
+    if device:
+        device.remove_device()
+
+
+def remove_root(
+    mon: Union[None, mons] = None,
+    mgr: Union[None, mgrs] = None,
+    pool: Union[None, pools] = None,
+    gateway: Union[None, gateways] = None,
+    mds: Union[None, mdss] = None,
+) -> None:
+    if mds:
+        mds.remove_mds()
+    if gateway:
+        gateway.remove_gateway()
+    if pool:
+        pool.remove_pools()
+    if mgr:
+        mgr.remove_mgr()
+    if mon:
+        mon.remove_mon()
+
+
+def remove(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools) -> int:
+    try:
+        if not os.path.exists(config["folder"]):
+            logging.error("Cannot remove system as folder does not exist")
+            return 0
+        logging.info(f"Removing {config['backend'].capitalize()}")
+        if config["service"] == "gateway":
+            gateways.set_gateway(config["backend"])
+            gateway = gateways.get_gateway(config["backend"]).GATEWAY(config["folder"])
+            gateway.remove_gateway()
+        elif config["service"] == "filesystem":
+            filesystem = filesystems.get_filesystem(config["backend"]).FILESYSTEM(
+                config["folder"]
+            )
+            filesystem.unmount_filesystem()
+        mds = mdss.get_mds(config["backend"]).MDS(config["folder"])
+        mds.remove_mds()
+        logging.info("Removing pools")
+        pool.remove_pools()
+        logging.info("Removing OSDs")
+        osd.remove_osds()
+        logging.info("Removing Devices")
+        for device in devices.AVAILABLE:
+            device = devices.get_device(device).DEVICE()
+            device.remove_device()
+        logging.info("Removing Manager")
+        mgr.remove_mgr()
+        logging.info("Removing Monitor")
+        mon.remove_mon()
+        logging.info("Storage Cluster Removed")
+    except PermissionError as e:
+        logging.exception(e)
+        logging.error("Please get required permissions to use DisTRaX ")
+    return 0
+
+
+def main() -> None:
+    ERROR = check_host(comm, rank, size)
+    if ERROR == -1:
+        print("error")
+
+    argvs = parser._argument_parser()
+    _action = argvs.action
+    print(_action)
+    _log_level = argvs.log_level
+    _log_level = parser.set_logging(_log_level)
+    logging.getLogger().setLevel(logging.DEBUG)
+    _config_file = argvs.config_file
+    config = parser._config_parser(_config_file)
+    if config == {}:
+        logging.error("Incorrect config file please consult documentation")
+
+    if config.get("log_level"):
+        logging.getLogger().setLevel(parser.set_logging(config["log_level"]))
+
+    mons.set_mon(config["backend"])
+    mon = mons.get_mon(config["backend"]).MON(folder=config["folder"])
+    mgrs.set_mgr(config["backend"])
+    mgr = mgrs.get_mgr(config["backend"]).MGR(folder=config["folder"])
+    osds.set_osd(config["backend"])
+    osd = osds.get_osd(config["backend"]).OSD(folder=config["folder"])
+    pools.set_pool(config["backend"])
+    pool = pools.get_pool(config["backend"]).POOL()
+
+    if _action == "create":
+        if create(config, mon, mgr, osd, pool) != 0:
+            if rank == 0:
+                logging.error("Storage system not created please read logs")
+    elif _action == "remove":
+        remove(config, mon, mgr, osd, pool)
+
+
+if __name__ == "__main__":
+    main()
