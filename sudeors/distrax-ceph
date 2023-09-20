@@ -4,7 +4,8 @@
 %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.conf /etc/ceph/ceph.conf
 %distrax ALL=NOPASSWD: /usr/bin/mkdir -p -m * /var/lib/ceph/mon/ceph-*
 %distrax ALL=NOPASSWD: /usr/bin/ceph-mon --cluster ceph --mkfs -i * --monmap */ceph.monmap --keyring */ceph.mon..keyring
-%distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph  /var/lib/ceph/mon/ceph-*
+%distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph /var/lib/ceph/mon/ceph-*
+%distrax ALL=NOPASSWD: /usr/bin/chown -R  ceph\:ceph /var/lib/ceph/mon/ceph-*
 %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.client.admin.keyring /etc/ceph/ceph.client.admin.keyring
 %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.mon..keyring /var/lib/ceph/mon/ceph-*/keyring
 %distrax ALL=NOPASSWD: /usr/bin/systemctl start ceph-mon@*
@@ -12,13 +13,15 @@
 # Create the MGR node
 %distrax ALL=NOPASSWD: /usr/bin/mkdir -p -m * /var/lib/ceph/mgr/ceph-*
 %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.mgr.keyring /var/lib/ceph/mgr/ceph-*/keyring
-%distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph  /var/lib/ceph/mgr/ceph-*
+%distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph /var/lib/ceph/mgr/ceph-*
+%distrax ALL=NOPASSWD: /usr/bin/chown -R ceph\:ceph /var/lib/ceph/mgr/ceph-*
 %distrax ALL=NOPASSWD: /usr/bin/systemctl start ceph-mgr@*
 
 # Create the MDS node
 %distrax ALL=NOPASSWD: /usr/bin/mkdir -p -m * /var/lib/ceph/mds/ceph-*
 %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.mds.keyring /var/lib/ceph/mds/ceph-*/keyring
-%distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph  /var/lib/ceph/mds/ceph-*
+%distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph /var/lib/ceph/mds/ceph-*
+%distrax ALL=NOPASSWD: /usr/bin/chown -R ceph\:ceph /var/lib/ceph/mds/ceph-*
 %distrax ALL=NOPASSWD: /usr/bin/systemctl start ceph-mds@*
 
 # Create BRD Block Device
@@ -35,6 +38,7 @@
 %distrax ALL=NOPASSWD: /usr/bin/mkdir -p -m * /var/lib/ceph/radosgw/ceph-radosgw.*
 %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.client.radosgw.keyring /var/lib/ceph/radosgw/ceph-radosgw.*/keyring
 %distrax ALL=NOPASSWD: /usr/bin/chown ceph\:ceph /var/lib/ceph/radosgw/ceph-radosgw.*
+%distrax ALL=NOPASSWD: /usr/bin/chown -R ceph\:ceph /var/lib/ceph/radosgw/ceph-radosgw.*
 %distrax ALL=NOPASSWD: /usr/bin/systemctl start ceph-radosgw@radosgw.*
 
 
@@ -42,6 +46,7 @@
 %distrax ALL=NOPASSWD: /usr/bin/mkdir -p -m * /mnt/distrax/*
 %distrax ALL=NOPASSWD: /usr/bin/mount -t ceph \:/ /mnt/distrax/* -o name=admin\,secret=*
 %distrax ALL=NOPASSWD: /usr/bin/chown *\:* /mnt/distrax
+%distrax ALL=NOPASSWD: /usr/bin/chown -R *\:* /mnt/distrax
 %distrax ALL=NOPASSWD: /usr/bin/chmod 775 /mnt/distrax
 
 # Remove Ceph
