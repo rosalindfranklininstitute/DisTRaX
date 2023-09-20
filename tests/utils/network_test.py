@@ -10,10 +10,12 @@ class TestNetwork:
 
     def test_ip_address_from_network_interface(self):
         interface = "lo"
-        assert network.ip_address_from_network_interface(interface) == "127.0.0.1"
+        ip, netmask, ip_netmask = network.ip_address_and_netmask_from_network_interface(
+            interface
+        )
+        assert ip == "127.0.0.1"
+        assert netmask == "8"
+        assert ip_netmask == "127.0.0.1/8"
         # Check that OSError is raised
         with pytest.raises(OSError):
-            network.ip_address_from_network_interface("1234")
-
-    def test_ip_with_netmask(self):
-        assert network.ip_with_netmask("127.0.0.1") == "127.0.0.1/32"
+            network.ip_address_and_netmask_from_network_interface("1234")
