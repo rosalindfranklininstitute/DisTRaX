@@ -25,13 +25,20 @@ class CephOSD:
         >>> osd = CephOSD(folder="distrax")
     """
 
-    def __init__(self, folder: str = "ceph"):
+    def __init__(
+        self, folder: str = "ceph", system_timeout: int = 60, ceph_timeout: int = 5
+    ):
         """Initialise the CephOSD object.
 
         Args:
-            folder: the place to place the keys of the ceph system
+            folder: the place to place the keys of the ceph system.
+            system_timeout: The amount of time before a timeout for system actions,
+            this defaulted to 60 seconds.
+            ceph_timeout: The amount of time a ceph command can run before timeout.
         """
         self.folder = folder
+        self.system_timeout = system_timeout
+        self.ceph_timeout = str(ceph_timeout)
 
     def create_osds(self, devices: List[str]) -> None:
         """Create the OSDs devices.
@@ -76,8 +83,7 @@ class CephOSD:
             )
             logger.info(f"Created {device} OSD")
 
-    @staticmethod
-    def is_osd_ready(num_up_and_in: int) -> bool:
+    def is_osd_ready(self, num_up_and_in: int) -> bool:
         """Check if the OSDs are ready.
 
         Args:
@@ -92,7 +98,15 @@ class CephOSD:
 
         """
         status_process = subprocess.run(
-            ["ceph", "osd", "stat", "--format=json"], stdout=subprocess.PIPE
+            [
+                "ceph",
+                "osd",
+                "stat",
+                "--format=json",
+                "--connect-timeout",
+                self.ceph_timeout,
+            ],
+            stdout=subprocess.PIPE,
         )
         status = dict(json.loads(status_process.stdout))
         """{'epoch': 1, 'num_osds': 5, 'num_up_osds': 5, 'osd_up_since': 1,
@@ -116,7 +130,14 @@ class CephOSD:
         for osd_id in osd_ids:
             osd_id = osd_id.strip(ceph.VAR_OSD_ID)
             subprocess.run(
-                ["ceph", "osd", "out", str(osd_id), "--connect-timeout", "5"]
+                [
+                    "ceph",
+                    "osd",
+                    "out",
+                    str(osd_id),
+                    "--connect-timeout",
+                    self.ceph_timeout,
+                ]
             )
             # Wait for the osd to be set to out
             time.sleep(1)
@@ -137,9 +158,15 @@ class CephOSD:
         for pv in pvs_output_lst:
             pvs = pv.split(",")  # PV, VG
             if pvs[1][:4] == "ceph":
-                subprocess.run(
+                remove_osd_process = subprocess.run(
                     ["sudo", "ceph-volume", "lvm", "zap", "--destroy", pvs[0]],
                 )
+                while remove_osd_process.returncode != 0:
+                    time.sleep(1)
+                    remove_osd_process = subprocess.run(
+                        ["sudo", "ceph-volume", "lvm", "zap", "--destroy", pvs[0]],
+                    )
+
         # Get ceph-volume services
         osd_services = glob.glob(
             "/etc/systemd/system/multi-user.target.wants/ceph-volume@lvm-*"
