@@ -12,3 +12,4 @@ Custom exception types used in DisTRaX.
 .. autoclass:: DaemonNotStartedError
 .. autoclass:: MDSNotStartedError
 .. autoclass:: MountingFilesystemError
+.. autoclass:: InterfaceDoesNotExistError
