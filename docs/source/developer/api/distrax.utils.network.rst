@@ -10,6 +10,5 @@ Functions relevant to network operations
 .. autosummary::
   :toctree: _autosummary
 
-    ip_address_from_network_interface
-    ip_with_netmask
+    ip_address_and_netmask_from_network_interface
     hostname
