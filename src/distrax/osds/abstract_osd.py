@@ -18,8 +18,7 @@ class AbstractOSD(Protocol):
         """
         ...
 
-    @staticmethod
-    def is_osd_ready(num_up_and_in: int) -> bool:
+    def is_osd_ready(self, num_up_and_in: int) -> bool:
         """Check if the OSDs are ready.
 
         Args:
