@@ -234,17 +234,30 @@ def pool_status(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    state = dict(json.loads(status.stdout))
-    pgmap: PoolStatus = PoolStatus(
-        pgs_by_state=state["pgmap"]["pgs_by_state"],
-        num_pgs=state["pgmap"]["num_pgs"],
-        num_pools=state["pgmap"]["num_pools"],
-        num_objects=state["pgmap"]["num_objects"],
-        data_bytes=state["pgmap"]["data_bytes"],
-        bytes_used=state["pgmap"]["bytes_used"],
-        bytes_avail=state["pgmap"]["bytes_avail"],
-        bytes_total=state["pgmap"]["bytes_total"],
-    )
+    pgmap: PoolStatus
+    if status.stdout.decode("utf-8") == "":
+        pgmap = PoolStatus(
+            pgs_by_state=[{"state_name": "error", "count": -1}],
+            num_pgs=-1,
+            num_pools=-1,
+            num_objects=-1,
+            data_bytes=-1,
+            bytes_used=-1,
+            bytes_avail=-1,
+            bytes_total=-1,
+        )
+    else:
+        state = dict(json.loads(status.stdout))
+        pgmap = PoolStatus(
+            pgs_by_state=state["pgmap"]["pgs_by_state"],
+            num_pgs=state["pgmap"]["num_pgs"],
+            num_pools=state["pgmap"]["num_pools"],
+            num_objects=state["pgmap"]["num_objects"],
+            data_bytes=state["pgmap"]["data_bytes"],
+            bytes_used=state["pgmap"]["bytes_used"],
+            bytes_avail=state["pgmap"]["bytes_avail"],
+            bytes_total=state["pgmap"]["bytes_total"],
+        )
     return pgmap
 
 
