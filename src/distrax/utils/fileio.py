@@ -176,14 +176,17 @@ def recursive_change_ownership(
         >>> distrax.utils.fileio.recursive_change_ownership("no_folder","usr", "grp")
         False
     """
-    if os.path.isdir(path):
-        for dir_path, _, filenames in os.walk(path):
-            change_ownership(dir_path, user, group, admin)
-            for filename in filenames:
-                change_ownership(os.path.join(dir_path, filename), user, group, admin)
-        return True
-    else:
+    command = ""
+    if admin:
+        command += "sudo "
+    command += f"chown -R {user}:{group} {path}"
+    command_lst = command.split()
+    process = subprocess.run(
+        command_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    if process.returncode != 0:
         return False
+    return True
 
 
 def change_permissions(path: str, mode: int) -> bool:
