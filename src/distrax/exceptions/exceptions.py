@@ -68,3 +68,15 @@ class MountingFilesystemError(Exception):
             message: Message to display
         """
         super().__init__(message)
+
+
+class InterfaceDoesNotExistError(Exception):
+    """When the interface  for the storage system to communicate over is not found."""
+
+    def __init__(self, message: str):
+        """Call the base class constructor with the parameters it needs.
+
+        Args:
+            message: Message to display
+        """
+        super().__init__(message)
