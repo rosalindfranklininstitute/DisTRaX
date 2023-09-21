@@ -44,13 +44,13 @@ def hosts_are_different(comm: MPI.Intracomm, rank: int, size: int) -> bool:
             if op.countOf(received_hosts, host_name) > 1:
                 different = False
                 break
+        logging.info("Hosts are:", received_hosts)
         if not different:
             logging.error(
                 "Not all hosts are different, please ensure each rank is on "
                 f"a separate host: {received_hosts}",
             )
             hosts_are_different = False
-    logging.info("Hosts are:", received_hosts)
     hosts_are_different = comm.bcast(hosts_are_different, root=0)
     comm.Barrier()
     return hosts_are_different
