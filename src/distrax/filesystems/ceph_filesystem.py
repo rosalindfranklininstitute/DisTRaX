@@ -93,12 +93,13 @@ class CephFilesystem:
         mounts = subprocess.run(
             ["findmnt", "-t", "ceph", "--json"], stdout=subprocess.PIPE
         )
-        mount_dict = json.loads(mounts.stdout)
-        if "filesystems" in mount_dict:
-            for filesystems in mount_dict["filesystems"]:
-                if filesystems["source"] == mon_mount:
-                    subprocess.run(["sudo", "umount", filesystems["target"]])
-        fileio.remove_dir(self.mount_point, admin=True)
+        if mounts.stdout.decode("utf-8") != "":
+            mount_dict = json.loads(mounts.stdout)
+            if "filesystems" in mount_dict:
+                for filesystems in mount_dict["filesystems"]:
+                    if filesystems["source"] == mon_mount:
+                        subprocess.run(["sudo", "umount", filesystems["target"]])
+            fileio.remove_dir(self.mount_point, admin=True)
 
 
 _filesystem = FILESYSTEM("ceph", CephFilesystem)
