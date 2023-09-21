@@ -1,4 +1,5 @@
 import configparser
+import getpass
 import json
 import os
 import subprocess
@@ -42,7 +43,7 @@ class CephFilesystem:
             >>> filesystem.mount_filesystem()
         """
         # Get user
-        user = os.getlogin()
+        user = getpass.getuser()
         # Get admin key
         admin_key = subprocess.run(
             ["ceph", "auth", "print-key", "client.admin"], stdout=subprocess.PIPE
