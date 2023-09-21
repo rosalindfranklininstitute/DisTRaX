@@ -50,6 +50,7 @@ def hosts_are_different(comm: MPI.Intracomm, rank: int, size: int) -> bool:
                 f"a separate host: {received_hosts}",
             )
             hosts_are_different = False
+    logging.info("Hosts are:", received_hosts)
     hosts_are_different = comm.bcast(hosts_are_different, root=0)
     comm.Barrier()
     return hosts_are_different
@@ -223,6 +224,7 @@ def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools)
             mpi_error_req.wait()
         except Exception as e:
             logging.exception(f"Rank {rank}: {e}")
+            logging.info("Reversing creation due to error")
             mpi_error = True
             mpi_error_req = comm.isend(mpi_error, dest=0, tag=11)
             mpi_error_req.wait()
