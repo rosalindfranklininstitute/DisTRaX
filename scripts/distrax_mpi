@@ -147,12 +147,13 @@ def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools)
     comm.Barrier()
 
     if config["service"] == "pool":
-        try:
-            pool.create_pool()
-        except Exception as e:
-            logging.exception(e)
-            logging.info("Reversing creation due to error")
-            mpi_error = True
+        if rank == 0:
+            try:
+                pool.create_pool()
+            except Exception as e:
+                logging.exception(e)
+                logging.info("Reversing creation due to error")
+                mpi_error = True
         mpi_error = comm.bcast(mpi_error, root=0)
         comm.Barrier()
         if mpi_error:
@@ -161,17 +162,17 @@ def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools)
             )
             return -1
 
-    if config["service"] == "gateway":
-        try:
-            gateways.set_gateway(config["backend"])
-            gateway = gateways.get_gateway(config["backend"]).GATEWAY(config["folder"])
-            gateway.create_gateway()
-            gateway.create_s3_user()
-        except Exception as e:
-            logging.exception(e)
-            logging.error("Waiting for OSDs to be ready timed out")
-            logging.info("Reversing creation due to error")
-            mpi_error = True
+    elif config["service"] == "gateway":
+        gateways.set_gateway(config["backend"])
+        gateway = gateways.get_gateway(config["backend"]).GATEWAY(config["folder"])
+        if rank == 0:
+            try:
+                gateway.create_gateway()
+                gateway.create_s3_user()
+            except Exception as e:
+                logging.exception(e)
+                logging.info("Reversing creation due to error")
+                mpi_error = True
         mpi_error = comm.bcast(mpi_error, root=0)
         comm.Barrier()
         if mpi_error:
@@ -187,15 +188,16 @@ def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools)
             )
             return -1
 
-    if config["service"] == "filesystem":
+    elif config["service"] == "filesystem":
         mdss.set_mds(config["backend"])
         mds = mdss.get_mds(config["backend"]).MDS(config["folder"])
-        try:
-            mds.create_mds()
-        except Exception as e:
-            logging.exception(e)
-            logging.info("Reversing creation due to error")
-            mpi_error = True
+        if rank == 0:
+            try:
+                mds.create_mds()
+            except Exception as e:
+                logging.exception(e)
+                logging.info("Reversing creation due to error")
+                mpi_error = True
         mpi_error = comm.bcast(mpi_error, root=0)
         comm.Barrier()
         if mpi_error:
