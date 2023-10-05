@@ -12,6 +12,7 @@ User Docs
 
             tutorials/install
             tutorials/quickstart
+            tutorials/quickstart_mpi
 
         +++
 

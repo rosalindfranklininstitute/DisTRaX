@@ -3,6 +3,8 @@ Installing DisTRaX
 
 This guide will get you up and running with installing DisTRaX.
 
+For multihost use make sure this is repeat for all hosts that you intend to use DisTRaX with.
+
 1. Pip install
 2. Setting up the DisTRaX group
 3. Adding users to the DisTRaX Group
@@ -13,10 +15,21 @@ Installing From GitHub
 
 To pip install the distrax program use the following:
 
-.. code-block::
-   :caption: pip install distrax
+The multihost version expects a from of MPI to be on the system such as `OpenMPI <https://www.open-mpi.org/>`_.
 
-    pip install -e git+https://github.com/rosalindfranklininstitute/DisTRaX.git#egg=distrax
+.. tab-set::
+
+    .. tab-item:: Single Host
+
+       .. code-block:: bash
+
+           pip install -e git+https://github.com/rosalindfranklininstitute/DisTRaX.git#egg=distrax
+
+    .. tab-item:: Multi Host
+
+       .. code-block:: bash
+
+           pip install -e git+https://github.com/rosalindfranklininstitute/DisTRaX.git#egg=distrax[mpi]
 
 Creating the DisTRaX Group
 --------------------------
@@ -55,7 +68,28 @@ Ceph
 Installing Ceph
 ~~~~~~~~~~~~~~~~
 
-Ensure that the ceph packages are available on every host that you plan to run DisTRaX on. Ceph's guide to install the packages is found here: https://docs.ceph.com/en/latest/install/get-packages/
+Ensure that the ceph packages are available on every host that you plan to run DisTRaX on. Ceph's guide to install the packages is found here: `get-packages <https://docs.ceph.com/en/latest/install/get-packages/>`_
+
+Please ensure the following packages are installed:
+
+* ceph
+* ceph-base
+* ceph-common
+* ceph-mds
+* ceph-mgr
+* ceph-mgr-modules-core
+* ceph-mon
+* ceph-osd
+* ceph-volume
+* libcephfs2
+* libsqlite3-mod-ceph
+* python3-ceph-argparse
+* python3-ceph-common
+* python3-cephfs
+* librados2
+* libradosstriper1
+* python3-rados
+* radosgw
 
 Ceph Sudoers File
 ~~~~~~~~~~~~~~~~~
@@ -65,7 +99,7 @@ The following block is the sudoers file required for distrax to be able to deplo
 .. code-block::
    :caption: distrax-ceph sudoers
 
-   # allow distrax group to create a ceph cluster
+    # allow distrax group to create a ceph cluster
 
     # Create the Monitor node
     %distrax ALL=NOPASSWD: /usr/bin/cp */ceph.conf /etc/ceph/ceph.conf

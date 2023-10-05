@@ -60,8 +60,11 @@ class CephMON:
             )
         # Get system details
         self.fsid = str(uuid.uuid4().hex)
-        self.ip = network.ip_address_from_network_interface(interface)
-        self.ip_netmask = network.ip_with_netmask(self.ip)
+        (
+            self.ip,
+            _,
+            self.ip_netmask,
+        ) = network.ip_address_and_netmask_from_network_interface(interface)
         # Create required self.folders
         fileio.create_dir(f"{ceph.VAR_MON}{self.hostname}", 755, admin=True)
         fileio.create_dir(self.folder, 775)
