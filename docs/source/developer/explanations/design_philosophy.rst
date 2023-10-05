@@ -1,7 +1,8 @@
 Design Philosophy
 =================
 
-DisTRaX is the decedent of DisTRaC, https://github.com/rosalindfranklininstitute/DisTRaC, which was designed to deploy a ceph storage cluster onto a High-Performance Computer Cluster. As a project, it served as a minimal viable product of the DisTRa idea (https://arxiv.org/pdf/2212.03054.pdf). However, as a software package, it needed more clean documentation and an easier way to distribute, maintain, and update or fix. Many of these issues arose because it was written in bash, which is unsuitable for large programs. Motivated by these problems, DisTRaX has been designed to solve all of these issues.
+DisTRaX is the decedent of `DisTRaC <https://github.com/rosalindfranklininstitute/DisTRaC>`_, which was designed to deploy a ceph storage cluster onto a High-Performance Computer Cluster. As a project, it served as a minimal viable product of the DisTRa idea `[1] <https://arxiv.org/abs/2212.03054>`_. However, as a software package, it needed more clean documentation and an easier way to distribute, maintain, and update or fix. Many of these issues arose because it was written in bash, which is unsuitable for large programs. Motivated by these problems, DisTRaX has been designed to solve all of these issues.
+
 .. note::
 
    This is currently being developed.
@@ -35,3 +36,9 @@ Minimal Dependencies
 --------------------
 
 DisTRaX has been designed to have minial dependencies on top of the requirements for the respective storage system. This improves the overall security of the system and makes the application easier to maintain.
+
+
+References
+----------
+
+[1] Mason-Williams, G., Bond, D., & Basham, M. (2022). DisTRaC: Accelerating high performance compute processing for temporary data storage. arXiv. https://doi.org/10.48550/ARXIV.2212.03054
