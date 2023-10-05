@@ -25,7 +25,7 @@ class CephGateway:
         >>> gateway = CephGateway(folder="ceph")
     """
 
-    def __init__(self, folder: str = "ceph"):
+    def __init__(self, folder: str = "ceph", timeout: int = 60):
         """Initialise the CephMGR object.
 
         Args:
@@ -38,6 +38,7 @@ class CephGateway:
         """
         self.hostname = network.hostname()
         self.folder = folder
+        self.timeout = timeout
 
     def create_gateway(self) -> None:
         """Create the Ceph Rados Gateway Daemon.
@@ -75,9 +76,14 @@ class CephGateway:
         system.start_service(f"ceph-radosgw@radosgw.{self.hostname}")
         # Ensure that the service has joined the cluster.
         gateway_started = False
+        start = time.time()
         while gateway_started is False:
             time.sleep(0.1)
             gateway_started = ceph.rgw_status()
+            if time.time() - start >= self.timeout:
+                raise TimeoutError(
+                    "Gateway Creation Timeout, please read the logs for more detail"
+                )
 
     def _add_gateway(self) -> str:
         """Adds the manager keys to the ceph system.
@@ -123,17 +129,25 @@ class CephGateway:
 
         """
         name: str = "distrax"
-        user_creation = subprocess.run(
-            [
-                "radosgw-admin",
-                "user",
-                "create",
-                f"--uid={name}",
-                f"--display-name={name}",
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
+        start = time.time()
+        user_creation_return_code = -1
+        while user_creation_return_code != 0:
+            user_creation = subprocess.run(
+                [
+                    "radosgw-admin",
+                    "user",
+                    "create",
+                    f"--uid={name}",
+                    f"--display-name={name}",
+                ],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            user_creation_return_code = user_creation.returncode
+            if time.time() - start >= self.timeout:
+                raise TimeoutError(
+                    "User Creation, please read the logs for more detail"
+                )
 
         user_creation_dict = json.loads(user_creation.stdout.decode())
 
