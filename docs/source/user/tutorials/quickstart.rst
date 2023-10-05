@@ -6,7 +6,7 @@ This guide will get you up and running with deploying and removing a storage clu
 This guide will focus on deploying a ceph cluster. To see more information about ceph, please read to docs: `https://docs.ceph.com/ <https://docs.ceph.com/>`_
 
 Commands
-========
+--------
 
 DisTRaX takes three arguments.
 
@@ -17,12 +17,12 @@ DisTRaX takes three arguments.
 The action defines what you would like DisTRaX to do, whether to build, aka `create` or destroy, aka `remove` a storage cluster.
 
 Config
-======
+------
 DisTRaX uses a config file to hold all the options of the cluster. The file consists of two main parts SETUP, RAM:
 
 
 Setup
-------
+~~~~~
 
 The Setup section has four required inputs and is used to configure the storage cluster:
 
@@ -43,7 +43,7 @@ The Setup section has four required inputs and is used to configure the storage 
     service = pool
 
 Service
-~~~~~~~
+:::::::
 
 This system supports three services, `Pool`, `Gateway` or `Filesystem`.
 
@@ -93,7 +93,7 @@ This specifies a filesystem at a /mnt/distrax.
     service = filesystem
 
 Ram
----
+:::
 The Ram section has three required inputs used as OSD for the storage cluster.
 
 * Type: The Ram kernel module to use
@@ -122,7 +122,7 @@ Whereas this creates 1 OSD with a size of 10GB
 
 
 Device
-------
+::::::
 
 This outlines which Block devices to use.
 
@@ -132,7 +132,7 @@ This outlines which Block devices to use.
 
 
 Examples
-========
+--------
 
 We would use the following configuration file to create a ceph cluster on our local system using 1GB of RAM with 1 OSD and a pool.
 
