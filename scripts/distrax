@@ -66,7 +66,7 @@ def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools)
         mon.remove_mon()
         return -1
 
-    osd_count = config["ram_number"] * config["number_of_hosts"]
+    osd_count = config["ram_number"]
     start = time.time()
     while not osd.is_osd_ready(num_up_and_in=osd_count):
         time.sleep(0.5)
