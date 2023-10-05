@@ -113,7 +113,6 @@ def create(config: Dict[str, Any], mon: mons, mgr: mgrs, osd: osds, pool: pools)
         osd.create_osds(paths)
         mpi_error_req = comm.isend(mpi_error, dest=0, tag=11)
         mpi_error_req.wait()
-        print("DONE")
     except Exception as e:
         logging.error("*" * 50)
         logging.error(f"RANK {rank}: {e}")
