@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>distrax.mons.ceph_mon &#8212; DisTRaX  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/distrax/mons/ceph_mon';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DisTRaX  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home Page</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../user/index.html">User Docs</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user/tutorials/install.html">Installing DisTRaX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user/tutorials/quickstart.html">Quick Start Guide!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user/tutorials/quickstart_mpi.html">Quick Start Guide for MPI!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user/explanations/message_to_sysadmins.html">Why Sudo: A Message to Sysadmins</a></li>
+</ul>
+</li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developer/index.html">Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer/explanations/design_philosophy.html">Design Philosophy</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../developer/api/distrax.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.mons.html"><code class="docutils literal notranslate"><span class="pre">distrax.mons</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mons.AVAILABLE.html">distrax.mons.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mons.set_mon.html">distrax.mons.set_mon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mons.get_mon.html">distrax.mons.get_mon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.mons.abstract_mon.html"><code class="docutils literal notranslate"><span class="pre">distrax.mons.abstract_mon</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.mons.ceph_mon.html"><code class="docutils literal notranslate"><span class="pre">distrax.mons.ceph_mon</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.mgrs.html"><code class="docutils literal notranslate"><span class="pre">distrax.mgrs</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mgrs.AVAILABLE.html">distrax.mgrs.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mgrs.set_mgr.html">distrax.mgrs.set_mgr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mgrs.get_mgr.html">distrax.mgrs.get_mgr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.mgrs.abstract_mgr.html"><code class="docutils literal notranslate"><span class="pre">distrax.mgrs.abstract_mgr</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.mgrs.ceph_mgr.html"><code class="docutils literal notranslate"><span class="pre">distrax.mgrs.ceph_mgr</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.devices.html"><code class="docutils literal notranslate"><span class="pre">distrax.devices</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.devices.AVAILABLE.html">distrax.devices.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.devices.set_device.html">distrax.devices.set_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.devices.get_device.html">distrax.devices.get_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.devices.abstract_device.html"><code class="docutils literal notranslate"><span class="pre">distrax.devices.abstract_device</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.devices.brd_device.html"><code class="docutils literal notranslate"><span class="pre">distrax.devices.brd_device</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.osds.html"><code class="docutils literal notranslate"><span class="pre">distrax.osds</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.osds.AVAILABLE.html">distrax.osds.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.osds.set_osd.html">distrax.osds.set_osd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.osds.get_osd.html">distrax.osds.get_osd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.osds.abstract_osd.html"><code class="docutils literal notranslate"><span class="pre">distrax.osds.abstract_osd</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.osds.ceph_osd.html"><code class="docutils literal notranslate"><span class="pre">distrax.osds.ceph_osd</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.pools.html"><code class="docutils literal notranslate"><span class="pre">distrax.pools</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.pools.AVAILABLE.html">distrax.pools.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.pools.set_pool.html">distrax.pools.set_pool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.pools.get_pool.html">distrax.pools.get_pool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.pools.abstract_pool.html"><code class="docutils literal notranslate"><span class="pre">distrax.pools.abstract_pool</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.pools.ceph_pool.html"><code class="docutils literal notranslate"><span class="pre">distrax.pools.ceph_pool</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.gateways.html"><code class="docutils literal notranslate"><span class="pre">distrax.gateways</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.gateways.AVAILABLE.html">distrax.gateways.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.gateways.set_gateway.html">distrax.gateways.set_gateway</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.gateways.get_gateway.html">distrax.gateways.get_gateway</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.gateways.abstract_gateway.html"><code class="docutils literal notranslate"><span class="pre">distrax.gateways.abstract_gateway</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.gateways.ceph_gateway.html"><code class="docutils literal notranslate"><span class="pre">distrax.gateways.ceph_gateway</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.mdss.html"><code class="docutils literal notranslate"><span class="pre">distrax.mdss</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mdss.AVAILABLE.html">distrax.mdss.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mdss.set_mds.html">distrax.mdss.set_mds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.mdss.get_mds.html">distrax.mdss.get_mds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.mdss.abstract_mds.html"><code class="docutils literal notranslate"><span class="pre">distrax.mdss.abstract_mds</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.mdss.ceph_mds.html"><code class="docutils literal notranslate"><span class="pre">distrax.mdss.ceph_mds</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.filesystems.html"><code class="docutils literal notranslate"><span class="pre">distrax.filesystems</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.filesystems.AVAILABLE.html">distrax.filesystems.AVAILABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.filesystems.set_filesystem.html">distrax.filesystems.set_filesystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/_autosummary/distrax.filesystems.get_filesystem.html">distrax.filesystems.get_filesystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.filesystems.abstract_filesystem.html"><code class="docutils literal notranslate"><span class="pre">distrax.filesystems.abstract_filesystem</span></code> class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.filesystems.ceph_filesystem.html"><code class="docutils literal notranslate"><span class="pre">distrax.filesystems.ceph_filesystem</span></code> class</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../developer/api/distrax.exceptions.html"><code class="docutils literal notranslate"><span class="pre">distrax.exceptions.exceptions</span></code> module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../developer/api/distrax.utils.html"><code class="docutils literal notranslate"><span class="pre">distrax.utils</span></code> module</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.utils.system.html"><code class="docutils literal notranslate"><span class="pre">distrax.utils.system</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.utils.fileio.html"><code class="docutils literal notranslate"><span class="pre">distrax.utils.fileio</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.utils.network.html"><code class="docutils literal notranslate"><span class="pre">distrax.utils.network</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../developer/api/distrax.utils.ceph.html"><code class="docutils literal notranslate"><span class="pre">distrax.utils.ceph</span></code> module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for distrax.mons.ceph_mon</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">import</span> <span class="nn">distrax.utils.ceph</span> <span class="k">as</span> <span class="nn">ceph</span>
+<span class="kn">import</span> <span class="nn">distrax.utils.fileio</span> <span class="k">as</span> <span class="nn">fileio</span>
+<span class="kn">import</span> <span class="nn">distrax.utils.network</span> <span class="k">as</span> <span class="nn">network</span>
+<span class="kn">import</span> <span class="nn">distrax.utils.system</span> <span class="k">as</span> <span class="nn">system</span>
+<span class="kn">from</span> <span class="nn">distrax.exceptions.exceptions</span> <span class="kn">import</span> <span class="n">ClusterExistsError</span><span class="p">,</span> <span class="n">DaemonNotStartedError</span>
+<span class="kn">from</span> <span class="nn">distrax.mons</span> <span class="kn">import</span> <span class="n">MON</span>
+
+
+<div class="viewcode-block" id="CephMON"><a class="viewcode-back" href="../../../developer/api/distrax.mons.ceph_mon.html#distrax.mons.ceph_mon.CephMON">[docs]</a><span class="k">class</span> <span class="nc">CephMON</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ceph Monitor Class.</span>
+
+<span class="sd">    This class contains all the methods required to create and remove a Ceph Monitor</span>
+
+<span class="sd">    To read more about the Ceph Monitor please see:</span>
+<span class="sd">    https://docs.ceph.com/en/latest/glossary/#term-Ceph-Monitor</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; mon = CephMON()</span>
+
+<span class="sd">        &gt;&gt;&gt; mon = CephMON(folder=&quot;distrax&quot;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ceph&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the CephMON object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            folder: the location to store the keys of the ceph system</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; mon = CephMON()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">hostname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fsid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip_netmask</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="n">folder</span>
+
+<div class="viewcode-block" id="CephMON.create_mon"><a class="viewcode-back" href="../../../developer/api/distrax.mons.ceph_mon.html#distrax.mons.ceph_mon.CephMON.create_mon">[docs]</a>    <span class="k">def</span> <span class="nf">create_mon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the Ceph Monitor daemon.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            interface: the network interface the cluster will be using.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; mon.create_mon(&quot;lo&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ceph_state</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;ceph&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--connect-timeout&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">],</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">ceph_state</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClusterExistsError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Ceph Cluster Exists: </span><span class="se">\r\n</span><span class="s2"> </span><span class="si">{</span><span class="n">ceph_state</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Get system details</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fsid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">)</span>
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ip_netmask</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">ip_address_and_netmask_from_network_interface</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
+        <span class="c1"># Create required self.folders</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">create_dir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">VAR_MON</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">755</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">create_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="mi">775</span><span class="p">)</span>
+        <span class="c1"># Write config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_config_file</span><span class="p">()</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">ETC_CEPH</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># Create keys</span>
+        <span class="n">ceph</span><span class="o">.</span><span class="n">create_mon_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+        <span class="n">ceph</span><span class="o">.</span><span class="n">create_admin_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+        <span class="n">ceph</span><span class="o">.</span><span class="n">create_osd_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">append_file_in_folder</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">ceph</span><span class="o">.</span><span class="n">MON_KEYRING</span><span class="p">,</span> <span class="p">[</span><span class="n">ceph</span><span class="o">.</span><span class="n">ADMIN_KEYRING</span><span class="p">,</span> <span class="n">ceph</span><span class="o">.</span><span class="n">OSD_KEYRING</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="c1"># Create Monmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_monmap</span><span class="p">()</span>
+        <span class="c1"># Create Cluster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_cluster</span><span class="p">()</span>
+        <span class="c1"># Copy files</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">MON_KEYRING</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">VAR_MON</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">/keyring&quot;</span><span class="p">,</span>
+            <span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">recursive_change_ownership</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">VAR_MON</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;ceph&quot;</span><span class="p">,</span> <span class="s2">&quot;ceph&quot;</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">ADMIN_KEYRING</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">ETC_CEPH</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">ADMIN_KEYRING</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Start Monitor</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">start_service</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ceph-mon@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">is_systemd_service_active</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ceph-mon@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Ceph Monitor Failed to Start, please investigate&quot;</span>
+            <span class="k">raise</span> <span class="n">DaemonNotStartedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;ceph&quot;</span><span class="p">,</span> <span class="s2">&quot;mon&quot;</span><span class="p">,</span> <span class="s2">&quot;enable-msgr2&quot;</span><span class="p">,</span> <span class="s2">&quot;--connect-timeout&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the Ceph Cluster with the monitor node.&quot;&quot;&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;sudo&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ceph-mon&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--cluster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ceph&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--mkfs&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+                <span class="s2">&quot;--monmap&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/ceph.monmap&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--keyring&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">MON_KEYRING</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_monmap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run&#39;s the ceph tool monmap to create the monmap for the cluster.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ceph.monmap file in the folder location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;monmaptool&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--create&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--clobber&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--add&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span>
+                <span class="s2">&quot;--fsid&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fsid</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/ceph.monmap&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_write_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the config file for ceph.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A file in the folder specified as ceph.conf</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;fsid&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fsid</span><span class="p">,</span>
+            <span class="s2">&quot;mon initial members&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+            <span class="s2">&quot;mon host&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span>
+            <span class="s2">&quot;public network&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_netmask</span><span class="p">,</span>
+            <span class="s2">&quot;cluster network&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_netmask</span><span class="p">,</span>
+            <span class="s2">&quot;auth cluster required&quot;</span><span class="p">:</span> <span class="n">ceph</span><span class="o">.</span><span class="n">AUTH</span><span class="p">,</span>
+            <span class="s2">&quot;auth service required&quot;</span><span class="p">:</span> <span class="n">ceph</span><span class="o">.</span><span class="n">AUTH</span><span class="p">,</span>
+            <span class="s2">&quot;auth client required&quot;</span><span class="p">:</span> <span class="n">ceph</span><span class="o">.</span><span class="n">AUTH</span><span class="p">,</span>
+            <span class="s2">&quot;osd pool default size&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>  <span class="c1"># Sets replication to 1</span>
+            <span class="s2">&quot;osd pool default pg autoscale mode&quot;</span><span class="p">:</span> <span class="s2">&quot;off&quot;</span><span class="p">,</span>  <span class="c1"># Stops autoscaling</span>
+            <span class="s2">&quot;log flush on exit&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>  <span class="c1"># Stops logging</span>
+            <span class="s2">&quot;log file&quot;</span><span class="p">:</span> <span class="s2">&quot;/dev/null&quot;</span><span class="p">,</span>  <span class="c1"># Sets logging to /dev/null</span>
+            <span class="s2">&quot;mon cluster log&quot;</span><span class="p">:</span> <span class="s2">&quot;/dev/null&quot;</span><span class="p">,</span>  <span class="c1"># Sets logging to /dev/null</span>
+            <span class="s2">&quot;mon allow pool delete&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>  <span class="c1"># Allows deletion of pools</span>
+        <span class="p">}</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configfile</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CephMON.remove_mon"><a class="viewcode-back" href="../../../developer/api/distrax.mons.ceph_mon.html#distrax.mons.ceph_mon.CephMON.remove_mon">[docs]</a>    <span class="k">def</span> <span class="nf">remove_mon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the Ceph monitor.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; mon.remove_mon()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">stop_service</span><span class="p">(</span><span class="s2">&quot;ceph-mon.target&quot;</span><span class="p">)</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">disable_service</span><span class="p">(</span><span class="s2">&quot;ceph-mon.target&quot;</span><span class="p">)</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">stop_service</span><span class="p">(</span><span class="s2">&quot;system-ceph</span><span class="se">\\</span><span class="s2">x2dmon.slice&quot;</span><span class="p">)</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">stop_service</span><span class="p">(</span><span class="s2">&quot;ceph.target&quot;</span><span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">remove_dir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">VAR_MON</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">remove_file</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ceph</span><span class="o">.</span><span class="n">VAR_RUN</span><span class="si">}</span><span class="s2">mon.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">.asok&quot;</span><span class="p">)</span>
+        <span class="n">fileio</span><span class="o">.</span><span class="n">remove_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span></div></div>
+
+
+<span class="n">_mon</span> <span class="o">=</span> <span class="n">MON</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ceph&quot;</span><span class="p">,</span> <span class="n">MON</span><span class="o">=</span><span class="n">CephMON</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gabryel Mason-Williams
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Gabryel Mason-Williams.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
